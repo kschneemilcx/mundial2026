@@ -44,23 +44,12 @@ cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
 .tab:hover{color:var(--txt)} .tab.on{color:var(--mag);border-image:var(--grad) 1;border-bottom:2px solid}
 /* ───── HERO DRAMÁTICO ───── */
 .stage{position:relative;margin:0 -16px 22px;padding:0 16px;overflow:hidden}
-.stageArt{position:relative;border-radius:0 0 26px 26px;overflow:hidden;height:230px;margin:0 -16px;
-border-bottom:1px solid var(--line);background:#0a0618}
-.stageArt .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-filter:saturate(.9) brightness(.66);opacity:0;transition:opacity 1.4s ease;
-animation:slowZoom 18s ease-in-out infinite alternate}
-.stageArt .photo.on{opacity:1}
-@keyframes slowZoom{from{transform:scale(1.0)}to{transform:scale(1.1)}}
-.stageArt .veil{position:absolute;inset:0;pointer-events:none;z-index:2;
-background:linear-gradient(180deg,rgba(6,4,16,.30) 0%,rgba(13,9,32,.52) 55%,rgba(6,4,16,.96) 100%),
-radial-gradient(ellipse 70% 90% at 50% 0%,rgba(232,121,249,.28),transparent 60%),
-linear-gradient(92deg,rgba(139,92,246,.20),transparent 50%,rgba(232,121,249,.16))}
-.stageArt .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.12;z-index:3;
-background-image:radial-gradient(rgba(255,255,255,.5) .5px,transparent .5px);background-size:3px 3px}
-.stageArt .sdots{position:absolute;left:18px;bottom:14px;z-index:4;display:flex;gap:6px}
-.stageArt .sdots i{width:18px;height:3px;border-radius:99px;background:rgba(255,255,255,.25);transition:.3s}
-.stageArt .sdots i.on{background:var(--mag);width:26px}
-@media (max-width:560px){.stageArt{height:180px}}
+.stageArt{position:relative;border-radius:0 0 26px 26px;overflow:hidden;height:200px;margin:0 -16px;
+border-bottom:1px solid var(--line)}
+.stageArt svg{position:absolute;inset:0;width:100%;height:100%}
+.stageGlow{position:absolute;left:50%;top:-40px;transform:translateX(-50%);width:340px;height:200px;
+background:radial-gradient(ellipse,rgba(232,121,249,.22),transparent 70%);filter:blur(28px);pointer-events:none}
+@media (max-width:560px){.stageArt{height:150px}}
 /* ───── PARTIDO EN VIVO DESTACADO ───── */
 .liveHero{position:relative;background:linear-gradient(135deg,#0e2418 0%,#13301f 50%,#0c1f16 100%);
 border:1px solid rgba(74,222,128,.45);border-radius:20px;padding:22px;margin-bottom:24px;overflow:hidden;
@@ -223,6 +212,14 @@ border-radius:20px;padding:24px;display:flex;align-items:center;gap:18px;flex-wr
 .gline:last-child{border:none}
 .gline b{color:var(--txt)}
 /* title race */
+.predVerdict{background:linear-gradient(92deg,rgba(139,92,246,.18),rgba(232,121,249,.10));
+border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
+.predVerdict b{color:var(--vio2);font-family:'Syne'}
+.predHero{background:linear-gradient(92deg,rgba(251,191,36,.14),rgba(232,121,249,.10));
+border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:13px 15px;font-size:12.5px;
+line-height:1.6;margin-bottom:18px}
+.predHero b{font-family:'Syne';font-weight:800;color:var(--gold);font-size:14px}
+.predHero span{color:var(--mut);font-size:11px}
 .tr{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
 .trow{display:grid;grid-template-columns:30px 1fr 58px;align-items:center;gap:12px;padding:9px 0;
 border-bottom:1px dashed var(--line);animation:up .5s ease both}
@@ -270,10 +267,62 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
 <div class="ticker"><span class="tk" id="ticker">Cargando marcadores en vivo…</span></div>
 
 <div class="stageArt" aria-hidden="true">
-  <div id="stagePhotos"></div>
-  <div class="veil"></div>
-  <div class="grain"></div>
-  <div class="sdots" id="sdots"></div>
+  <svg viewBox="0 0 1080 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0a0618"/><stop offset="1" stop-color="#160d2e"/>
+      </linearGradient>
+      <radialGradient id="spot" cx="50%" cy="0%" r="70%">
+        <stop offset="0" stop-color="rgba(232,121,249,.35)"/><stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1a1438"/><stop offset="1" stop-color="#0d0820"/>
+      </linearGradient>
+      <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(167,139,250,.5)"/><stop offset="1" stop-color="transparent"/>
+      </linearGradient>
+      <linearGradient id="ballg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#c9bdf0"/>
+      </linearGradient>
+    </defs>
+    <rect width="1080" height="200" fill="url(#sky)"/>
+    <path d="M0 70 L1080 70 L1080 120 L0 120 Z" fill="#140d2a"/>
+    <g opacity=".5">
+      <circle cx="120" cy="46" r="2.4" fill="#a78bfa"/><circle cx="300" cy="40" r="2.4" fill="#e879f9"/>
+      <circle cx="520" cy="44" r="2.4" fill="#a78bfa"/><circle cx="760" cy="40" r="2.4" fill="#fbbf24"/>
+      <circle cx="960" cy="46" r="2.4" fill="#a78bfa"/>
+      <circle cx="200" cy="56" r="1.8" fill="#e879f9"/><circle cx="430" cy="58" r="1.8" fill="#a78bfa"/>
+      <circle cx="650" cy="54" r="1.8" fill="#fbbf24"/><circle cx="880" cy="58" r="1.8" fill="#a78bfa"/>
+    </g>
+    <g>
+      <rect x="158" y="8" width="44" height="10" rx="2" fill="#2a2150"/>
+      <polygon points="180,16 60,120 320,120" fill="url(#beam)" opacity=".55"/>
+      <rect x="878" y="8" width="44" height="10" rx="2" fill="#2a2150"/>
+      <polygon points="900,16 760,120 1020,120" fill="url(#beam)" opacity=".55"/>
+    </g>
+    <ellipse cx="540" cy="20" rx="640" ry="120" fill="url(#spot)"/>
+    <path d="M-40 118 L1120 118 L1280 200 L-200 200 Z" fill="url(#pitch)"/>
+    <g stroke="rgba(167,139,250,.28)" stroke-width="2" fill="none">
+      <line x1="540" y1="118" x2="540" y2="200"/>
+      <ellipse cx="540" cy="160" rx="70" ry="26"/>
+      <path d="M250 200 L320 130 L760 130 L830 200"/>
+    </g>
+    <g fill="#0b0718" opacity=".92">
+      <path d="M430 175 q-4 -16 2 -26 q-8 -10 -2 -20 q4 -8 12 -7 q9 1 9 10 q6 8 1 18 q7 12 1 28 q-3 6 -9 5 q3 8 -2 14 l-5 -1 l3 -13 q-6 1 -9 -4 l-8 12 l-5 -3 l11 -16 q4 -6 10 -3 z" transform="translate(-10,0)"/>
+      <circle cx="432" cy="92" r="9" fill="#0b0718"/>
+      <path d="M650 178 q-3 -18 4 -30 q-7 -9 0 -20 q5 -9 14 -6 q9 3 6 13 q5 10 -2 20 q8 14 3 28 l8 8 l-4 5 l-11 -10 q-5 2 -10 -2 l-2 14 l-6 0 l1 -16 q-2 -6 6 -7 z"/>
+      <circle cx="668" cy="88" r="9" fill="#0b0718"/>
+    </g>
+    <g transform="translate(710,150)">
+      <circle r="13" fill="url(#ballg)"/>
+      <path d="M0 -13 L7 -4 L4 7 L-4 7 L-7 -4 Z" fill="#1a1438"/>
+      <circle r="13" fill="none" stroke="#fff" stroke-width="1" opacity=".5"/>
+      <g stroke="#e879f9" stroke-width="1.6" opacity=".8">
+        <line x1="16" y1="-2" x2="30" y2="-6"/><line x1="16" y1="4" x2="28" y2="8"/><line x1="14" y1="10" x2="24" y2="18"/>
+      </g>
+    </g>
+  </svg>
+  <div class="stageGlow"></div>
 </div>
 
 <div class="wrap">
@@ -367,39 +416,6 @@ if (CONFIG.whatsapp && !CONFIG.whatsapp.includes("PEGA_AQUI")) {
   wa.style.cssText = "display:block;text-align:center;margin-top:18px;background:#25D366;color:#06210f;font-family:Syne,sans-serif;font-weight:700;font-size:14px;padding:13px 20px;border-radius:12px;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.35)";
   document.getElementById('dlgTxt').after(wa);
 }
-
-/* ═════════════ CARRUSEL DEL BANNER (estadios) ═════════════ */
-// Fotos de estadios llenos / fútbol — Unsplash, licencia libre.
-// Para cambiarlas por TUS imágenes de IA: sube los archivos al repo y pon aquí
-// la ruta, ej: "estadio1.jpg". También sirven URLs completas https://...
-const STAGE_PHOTOS = [
-  "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1600&q=80&fm=jpg&fit=crop",
-  "https://images.unsplash.com/photo-1471295253337-3ceaaedca402?w=1600&q=80&fm=jpg&fit=crop",
-  "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=1600&q=80&fm=jpg&fit=crop",
-  "https://images.unsplash.com/photo-1518604666860-9ed391f76460?w=1600&q=80&fm=jpg&fit=crop"
-];
-(function initStage() {
-  const wrap = document.getElementById('stagePhotos');
-  const dotsBox = document.getElementById('sdots');
-  if (!wrap) return;
-  STAGE_PHOTOS.forEach((src, i) => {
-    const img = document.createElement('img');
-    img.className = 'photo' + (i === 0 ? ' on' : '');
-    img.src = src; img.alt = ''; img.loading = i === 0 ? 'eager' : 'lazy';
-    wrap.appendChild(img);
-    const d = document.createElement('i'); if (i === 0) d.className = 'on';
-    dotsBox.appendChild(d);
-  });
-  const imgs = wrap.querySelectorAll('.photo');
-  const dots = dotsBox.querySelectorAll('i');
-  let cur = 0;
-  if (imgs.length < 2) return;
-  setInterval(() => {
-    imgs[cur].classList.remove('on'); dots[cur].classList.remove('on');
-    cur = (cur + 1) % imgs.length;
-    imgs[cur].classList.add('on'); dots[cur].classList.add('on');
-  }, 5000);
-})();
 
 /* ═════════════ DATOS CURIOSOS ═════════════ */
 const FACTS = [
@@ -833,22 +849,50 @@ function renderTeamDetail() {
     </div>`;
 }
 
+function predCardHTML(m, i) {
+  const p = probs(m.h, m.a);
+  const pick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
+  const f = x => Math.round(x * 100);
+  const verdict = pick === "d"
+    ? `⚖️ El modelo predice <b>partido parejo</b>`
+    : `🔮 El modelo predice que gana <b>${pick === "h" ? esc(m.h) : esc(m.a)}</b>`;
+  const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "⚽";
+  return `<div class="mc" style="animation-delay:${(i||0)*0.06}s">
+    <div class="mtop"><span>${fmtD(m.date)} · ${fmtT(m.date)}</span><span class="badge pre">PRÓXIMO</span></div>
+    <div class="predVerdict">${verdict}</div>
+    <div class="row"><span class="tm" onclick="goTeam('${esc(m.h)}')">${lg(m.hl)}<span class="nm">${esc(m.h)}</span></span>
+      <span style="font-family:'Syne';font-weight:800;color:var(--vio2)">${f(p.h)}%</span></div>
+    <div class="row" style="justify-content:center;font-size:11px;color:var(--mut)">Empate ${f(p.d)}%</div>
+    <div class="row"><span class="tm" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span class="nm">${esc(m.a)}</span></span>
+      <span style="font-family:'Syne';font-weight:800;color:var(--mag)">${f(p.a)}%</span></div>
+    <div class="dbar" style="margin-top:6px"><i class="ph" style="width:${p.h*100}%"></i>
+      <i class="pd" style="width:${p.d*100}%;animation-delay:.15s"></i>
+      <i class="pa" style="width:${p.a*100}%;animation-delay:.3s"></i></div>
+    <div class="ven">📍 ${esc(m.venue)}</div></div>`;
+}
+
 function renderPred() {
   const next = state.all.filter(m => m.state === "pre").slice(0, 9);
   const mcHTML = !state.mc
     ? `<div class="tr"><p style="color:var(--mut);font-size:13px">Simulando 3.000 torneos en tu navegador…</p></div>`
     : (() => {
       const top = state.mc.slice(0, 12), max = top[0].champ || 1;
-      return `<div class="tr"><h2 style="font-size:17px;margin-bottom:4px">🏆 Camino al título</h2>
-      <p style="font-size:11px;color:var(--mut);margin-bottom:16px">Probabilidad de campeonar · Monte Carlo 3.000 sims con el estado REAL del torneo</p>
+      const champ = top[0];
+      return `<div class="tr">
+      <div class="predHero">🏆 Si el Mundial se jugara hoy 3.000 veces, el modelo corona más seguido a
+        <b onclick="goTeam('${esc(champ.t)}')" style="cursor:pointer">${esc(champ.t)}</b>
+        <span>(${champ.champ.toFixed(1)}% de las veces)</span></div>
+      <h2 style="font-size:17px;margin-bottom:4px">🏆 Camino al título</h2>
+      <p style="font-size:11px;color:var(--mut);margin-bottom:16px">Probabilidad de campeonar · Monte Carlo 3.000 simulaciones con el estado REAL del torneo</p>
       ${top.map((t, i) => `<div class="trow" style="animation-delay:${i*0.05}s">
         <span class="rk">${i+1}</span><div>
         <div class="tname" style="cursor:pointer" onclick="goTeam('${esc(t.t)}')">${esc(t.t)} <span style="font-size:10px;color:var(--mut)">semis ${t.semi.toFixed(0)}%</span></div>
         <div class="tbar"><i style="width:${t.champ/max*100}%"></i></div></div>
         <span class="pct">${t.champ.toFixed(1)}%</span></div>`).join("")}</div>`;
     })();
-  $("v-pred").innerHTML = `<h2 style="font-size:16px;margin-bottom:14px">🔮 Próximos partidos · probabilidad 1X2 (modelo Elo)</h2>
-    <div class="grid">${next.map(cardHTML).join("")}</div>${mcHTML}`;
+  $("v-pred").innerHTML = `<h2 style="font-size:16px;margin-bottom:6px">🔮 ¿Quién ganará cada partido?</h2>
+    <p style="font-size:11.5px;color:var(--mut);margin-bottom:16px">El modelo Elo analiza la fuerza de cada selección y predice el ganador de los próximos partidos.</p>
+    <div class="grid">${next.map(predCardHTML).join("")}</div>${mcHTML}`;
 }
 
 function renderScorers() { renderGrupos(); if ($("hoyScorers")) $("hoyScorers").innerHTML = scorersHTML(6); }
