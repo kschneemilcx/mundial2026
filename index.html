@@ -121,6 +121,8 @@ border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
 .vt span{font-size:11.5px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 .vs{font-family:'Syne';font-weight:800;color:var(--mut);font-size:13px}
 .vbtns{display:grid;grid-template-columns:1fr .7fr 1fr;gap:7px}
+.vcta{font-size:11.5px;color:var(--vio2);text-align:center;margin-bottom:10px;font-weight:700}
+.vcta b{color:var(--gold)}
 .vb{background:var(--card2);border:1px solid var(--line);color:var(--txt);font-family:'Space Mono';font-size:11.5px;
 padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
 .vb:hover{border-color:var(--mag);color:var(--mag)}
@@ -130,8 +132,18 @@ padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
 .vmsg.ok{color:var(--live)} .vmsg.dare{color:var(--gold)}
 /* duel */
 .duel{margin-top:12px}
-.dlab{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:4px}
-.dbar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--line)}
+.fav{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:9px;
+background:rgba(139,92,246,.12);border:1px solid var(--line);border-radius:9px;padding:7px 10px}
+.fav .ico{font-size:13px}
+.fav b{color:var(--vio2);font-family:'Syne'}
+.fav .pc{margin-left:auto;font-family:'Syne';font-weight:800;color:var(--gold);font-size:13px}
+.dlab{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:5px;gap:6px}
+.dlab span{display:flex;flex-direction:column;line-height:1.3}
+.dlab .nm{color:var(--txt);font-weight:700;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dlab .pc{font-family:'Syne';font-weight:800;font-size:13px}
+.dlab .l{text-align:left}.dlab .c{text-align:center}.dlab .r{text-align:right}
+.dlab .c .nm{align-self:center}.dlab .r{align-items:flex-end}
+.dbar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--line)}
 .dbar i{display:block;height:100%;transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
 .dbar .ph{background:linear-gradient(90deg,var(--vio),var(--mag))}
 .dbar .pd{background:#43386b}
@@ -295,7 +307,7 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
     </div>
     <div class="voteSec">
       <div class="secHead">
-        <h2>🗳️ ¿Quién gana? Vota y reta al modelo</h2>
+        <h2>🗳️ Vota: ¿quién gana el próximo partido?</h2>
         <span class="score" id="myScore"></span>
       </div>
       <div class="vgrid" id="votes"><div class="skel">Cargando próximos partidos…</div></div>
@@ -579,11 +591,22 @@ const fmtD = d => d.toLocaleDateString("es", { weekday: "short", day: "numeric",
 
 function duelHTML(m) {
   const p = probs(m.h, m.a), f = x => Math.round(x * 100);
-  return `<div class="duel"><div class="dlab">
-    <span>${f(p.h)}%</span><span>E ${f(p.d)}%</span><span>${f(p.a)}%</span></div>
+  const pick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
+  const favName = pick === "h" ? esc(m.h) : pick === "a" ? esc(m.a) : "Empate";
+  const favPct = f(Math.max(p.h, p.d, p.a));
+  const favTxt = pick === "d"
+    ? `El modelo ve un partido <b>parejo</b>`
+    : `El modelo favorece a <b>${favName}</b>`;
+  return `<div class="duel">
+    <div class="fav"><span class="ico">🔮</span><span>${favTxt}</span><span class="pc">${favPct}%</span></div>
+    <div class="dlab">
+      <span class="l"><span class="nm">${esc(m.h)}</span><span class="pc" style="color:var(--vio2)">${f(p.h)}%</span></span>
+      <span class="c"><span class="nm">Empate</span><span class="pc" style="color:var(--mut)">${f(p.d)}%</span></span>
+      <span class="r"><span class="nm">${esc(m.a)}</span><span class="pc" style="color:var(--mag)">${f(p.a)}%</span></span>
+    </div>
     <div class="dbar"><i class="ph" style="width:${p.h*100}%"></i>
-    <i class="pd" style="width:${p.d*100}%;animation-delay:.15s"></i>
-    <i class="pa" style="width:${p.a*100}%;animation-delay:.3s"></i></div></div>`;
+      <i class="pd" style="width:${p.d*100}%;animation-delay:.15s"></i>
+      <i class="pa" style="width:${p.a*100}%;animation-delay:.3s"></i></div></div>`;
 }
 
 function cardHTML(m, i) {
@@ -609,14 +632,17 @@ function voteCardHTML(m, i) {
   const lg = u => u ? `<img src="${esc(u)}" alt=""/>` : "<span style='font-size:34px'>⚽</span>";
   const modelPick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
   const pickName = k => k === "h" ? esc(m.h) : k === "a" ? esc(m.a) : "Empate";
+  const cta = myVote
+    ? `<div class="vcta">Tu voto: <b>${pickName(myVote)}</b> · toca para cambiar</div>`
+    : `<div class="vcta">👇 ¿Quién crees que gana? Toca tu favorito</div>`;
   let result = "";
   if (myVote) {
     const agree = myVote === modelPick;
     result = `<div class="vres">${duelHTML(m)}
       <div class="vmsg ${agree ? "ok" : "dare"}">
         ${agree
-          ? `✅ Coincides con el modelo: <b>${pickName(modelPick)}</b> es el favorito (${Math.round(Math.max(p.h,p.d,p.a)*100)}%).`
-          : `😏 Te atreviste contra el modelo. Tú: <b>${pickName(myVote)}</b> · Modelo: <b>${pickName(modelPick)}</b>. Veremos quién acierta…`}
+          ? `✅ Vas con el favorito del modelo (<b>${pickName(modelPick)}</b>). ¿Tendrán razón?`
+          : `🔥 ¡Te la jugaste contra el modelo! Tú dices <b>${pickName(myVote)}</b>, el modelo dice <b>${pickName(modelPick)}</b>.`}
       </div></div>`;
   }
   return `<div class="vc" style="animation-delay:${i*0.07}s">
@@ -626,10 +652,11 @@ function voteCardHTML(m, i) {
       <span class="vs">VS</span>
       <div class="vt">${lg(m.al)}<span>${esc(m.a)}</span></div>
     </div>
+    ${cta}
     <div class="vbtns">
-      <button class="vb${myVote==="h"?" sel":""}" onclick="vote('${m.id}','h')">${esc(m.h.split(" ")[0])}</button>
+      <button class="vb${myVote==="h"?" sel":""}" onclick="vote('${m.id}','h')">Gana ${esc(m.h.split(" ")[0])}</button>
       <button class="vb${myVote==="d"?" sel":""}" onclick="vote('${m.id}','d')">Empate</button>
-      <button class="vb${myVote==="a"?" sel":""}" onclick="vote('${m.id}','a')">${esc(m.a.split(" ")[0])}</button>
+      <button class="vb${myVote==="a"?" sel":""}" onclick="vote('${m.id}','a')">Gana ${esc(m.a.split(" ")[0])}</button>
     </div>
     ${result}</div>`;
 }
