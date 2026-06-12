@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mundial 2026 Live · Datos en tiempo real</title>
-<meta name="description" content="Resultados en vivo, grupos, votaciones y predicciones del Mundial 2026. Hecho con 💜 para la comunidad." />
+<meta name="description" content="Resultados en vivo, grupos, equipos, goleadores, votaciones y predicciones del Mundial 2026. Hecho con 💜 para la comunidad." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
@@ -18,7 +18,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;background:var(--bg);color:var(--txt);font-family:'Space Mono',monospace;overflow-x:hidden}
-/* orbes de fondo */
 body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(110px);z-index:0;pointer-events:none}
 body::before{width:520px;height:520px;background:rgba(139,92,246,.16);top:-180px;left:-120px;animation:float1 16s ease-in-out infinite}
 body::after{width:460px;height:460px;background:rgba(232,121,249,.10);bottom:-160px;right:-120px;animation:float2 20s ease-in-out infinite}
@@ -27,12 +26,10 @@ body::after{width:460px;height:460px;background:rgba(232,121,249,.10);bottom:-16
 .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 16px 96px}
 h1,h2,h3{font-family:'Syne',sans-serif}
 a{color:var(--vio2)}
-/* ticker */
 .ticker{position:relative;z-index:1;overflow:hidden;border-bottom:1px solid var(--line);background:rgba(10,7,22,.9);white-space:nowrap;backdrop-filter:blur(6px)}
 .tk{display:inline-block;padding:8px 0;animation:scroll 45s linear infinite;font-size:12px;color:var(--mut)}
 .tk b{color:var(--mag)} .tk .lv{color:var(--live)}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-/* header */
 .hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:34px 0 8px}
 .hdr h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.025em;line-height:.95;
 background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -40,12 +37,11 @@ background:var(--grad);-webkit-background-clip:text;background-clip:text;color:t
 letter-spacing:.14em;animation:blink 1.6s ease infinite;background:rgba(74,222,128,.06)}
 .sub{color:var(--mut);font-size:12px;margin:8px 0 20px}
 .upd{font-size:10px;opacity:.8}
-/* tabs */
-.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
-.tab{background:none;border:none;color:var(--mut);font-family:'Space Mono';font-size:13px;padding:11px 14px;
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{background:none;border:none;color:var(--mut);font-family:'Space Mono';font-size:12.5px;padding:11px 12px;
 cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
 .tab:hover{color:var(--txt)} .tab.on{color:var(--mag);border-image:var(--grad) 1;border-bottom:2px solid}
-/* ───── CARRUSEL DE DATOS CURIOSOS (firma de la página) ───── */
+/* carrusel */
 .fact{position:relative;background:linear-gradient(135deg,#1a1233 0%,#241345 55%,#1a0f33 100%);
 border:1px solid var(--line);border-radius:20px;padding:26px 26px 30px;margin-bottom:24px;overflow:hidden;
 box-shadow:0 14px 50px rgba(139,92,246,.13)}
@@ -56,7 +52,7 @@ background:linear-gradient(120deg,rgba(167,139,250,.55),rgba(232,121,249,.25),tr
 .fact .em{font-size:38px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 14px rgba(232,121,249,.35))}
 .fact h2{font-size:clamp(18px,3.4vw,26px);font-weight:800;margin-bottom:10px;line-height:1.18}
 .fact p{font-size:13.5px;line-height:1.75;color:var(--mut);max-width:680px}
-.fact .ctr{position:absolute;right:22px;top:22px;display:flex;gap:8px;align-items:center}
+.fact .ctr{position:absolute;right:22px;top:22px;display:flex;gap:8px}
 .fact .nav{background:rgba(167,139,250,.12);border:1px solid var(--line);color:var(--vio2);width:32px;height:32px;
 border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
 .fact .nav:hover{background:var(--vio);color:#fff}
@@ -67,9 +63,9 @@ border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
 @keyframes fill{to{width:100%}}
 .factBody{animation:fadeIn .5s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-/* ───── VOTACIÓN ───── */
+/* votación */
 .voteSec{margin-bottom:26px}
-.secHead{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.secHead{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
 .secHead h2{font-size:17px}
 .score{font-size:11px;color:var(--gold);border:1px solid rgba(251,191,36,.4);padding:4px 11px;border-radius:99px;background:rgba(251,191,36,.06)}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
@@ -89,7 +85,7 @@ padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
 .vres{margin-top:12px;animation:fadeIn .4s ease}
 .vmsg{font-size:11px;margin-top:9px;line-height:1.6}
 .vmsg.ok{color:var(--live)} .vmsg.dare{color:var(--gold)}
-/* duel bar */
+/* duel */
 .duel{margin-top:12px}
 .dlab{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:4px}
 .dbar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--line)}
@@ -110,7 +106,7 @@ animation:up .5s ease both;transition:.2s}
 .badge.ft{color:var(--mut)} .badge.pre{color:var(--vio2)}
 @keyframes blink{50%{opacity:.45}}
 .row{display:flex;align-items:center;justify-content:space-between;margin:7px 0;font-size:14.5px}
-.tm{display:flex;align-items:center;gap:9px;min-width:0}
+.tm{display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer}
 .tm img{width:22px;height:22px;object-fit:contain}
 .tm .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sc{font-family:'Syne';font-weight:800;font-size:22px}
@@ -118,18 +114,59 @@ animation:up .5s ease both;transition:.2s}
 .ven{font-size:10px;color:var(--mut);margin-top:10px}
 .dayHead{font-family:'Syne';font-weight:700;font-size:14px;margin:26px 0 12px;letter-spacing:.04em;
 background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
-/* groups */
+/* tablas */
 .gsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.gbtn{background:var(--card);border:1px solid var(--line);color:var(--mut);width:38px;height:38px;
-border-radius:10px;font-family:'Syne';font-weight:700;cursor:pointer;transition:.15s}
+.gbtn{background:var(--card);border:1px solid var(--line);color:var(--mut);min-width:38px;height:38px;padding:0 10px;
+border-radius:10px;font-family:'Syne';font-weight:700;cursor:pointer;transition:.15s;font-size:13px}
 .gbtn:hover{border-color:var(--mag);color:var(--mag)} .gbtn.on{background:var(--vio);color:#fff;border-color:var(--vio)}
-.gt{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow-x:auto}
-.gt table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+.gt{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow-x:auto;animation:up .4s ease both}
+.gt table{width:100%;border-collapse:collapse;font-size:13px}
 .gt th{font-size:10px;color:var(--mut);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em}
 .gt td{padding:12px 14px;border-bottom:1px solid var(--line)}
 .gt tr:last-child td{border:none}
 .gt tr.q td:first-child{box-shadow:inset 3px 0 0 var(--mag)}
 .pts{font-family:'Syne';font-weight:800;color:var(--gold)}
+.gtitle{font-family:'Syne';font-weight:700;font-size:13px;padding:12px 14px 0;color:var(--vio2)}
+.allg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.allg .gt table{min-width:0;font-size:12px}
+.allg .gt td,.allg .gt th{padding:8px 10px}
+/* goleadores */
+.gl{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:22px}
+.glrow{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:12px;padding:10px 0;
+border-bottom:1px dashed var(--line);animation:up .4s ease both}
+.glrow:last-child{border:none}
+.glrow .rk{font-family:'Syne';font-weight:800;color:var(--mut)}
+.glrow:first-child .rk{color:var(--gold)}
+.glrow .who{font-size:13px}
+.glrow .who small{display:block;color:var(--mut);font-size:10.5px;margin-top:2px}
+.glrow .g{font-family:'Syne';font-weight:800;font-size:17px;color:var(--gold)}
+/* equipos */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:20px}
+.tchip{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 11px;display:flex;
+align-items:center;gap:8px;font-size:11.5px;cursor:pointer;transition:.15s}
+.tchip img{width:20px;height:20px;object-fit:contain}
+.tchip:hover{border-color:var(--mag);transform:translateY(-1px)}
+.tchip.on{background:var(--vio);border-color:var(--vio);color:#fff}
+.tchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.thero{background:linear-gradient(135deg,#1a1233,#241345 60%,#1a0f33);border:1px solid var(--line);
+border-radius:20px;padding:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px;animation:up .4s ease both}
+.thero img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 8px 22px rgba(0,0,0,.6))}
+.thero h2{font-size:clamp(22px,4vw,32px);font-weight:800}
+.thero .meta{font-size:12px;color:var(--mut);margin-top:6px;line-height:1.7}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+.kpi{background:rgba(139,92,246,.10);border:1px solid var(--line);border-radius:13px;padding:10px 16px;text-align:center;min-width:78px}
+.kpi b{display:block;font-family:'Syne';font-weight:800;font-size:20px;color:var(--gold)}
+.kpi span{font-size:9.5px;color:var(--mut);letter-spacing:.1em}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;animation:up .4s ease both}
+.panel h3{font-size:14px;margin-bottom:12px;color:var(--mag)}
+.flist{display:flex;flex-direction:column;gap:10px}
+.fitem{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;gap:10px}
+.fitem .r{font-family:'Syne';font-weight:800}
+.fitem .w{color:var(--live)} .fitem .l{color:var(--red)} .fitem .e{color:var(--gold)}
+.gline{font-size:12px;color:var(--mut);padding:6px 0;border-bottom:1px dashed var(--line)}
+.gline:last-child{border:none}
+.gline b{color:var(--txt)}
 /* title race */
 .tr{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
 .trow{display:grid;grid-template-columns:30px 1fr 58px;align-items:center;gap:12px;padding:9px 0;
@@ -180,9 +217,10 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
     <span class="upd" id="upd"></span></p>
 
   <nav class="tabs">
-    <button class="tab on" data-t="hoy">⚽ Hoy / En vivo</button>
+    <button class="tab on" data-t="hoy">⚽ Hoy</button>
     <button class="tab" data-t="cal">📅 Calendario</button>
-    <button class="tab" data-t="grupos">📊 Grupos</button>
+    <button class="tab" data-t="grupos">📊 Tablas</button>
+    <button class="tab" data-t="equipos">🌍 Equipos</button>
     <button class="tab" data-t="pred">🔮 Predicciones</button>
     <button class="tab" data-t="hist">📜 Historia</button>
   </nav>
@@ -190,7 +228,6 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
   <div id="err"></div>
 
   <section id="v-hoy">
-    <!-- carrusel de datos curiosos -->
     <div class="fact" id="fact">
       <div class="ctr">
         <button class="nav" onclick="factPrev()" aria-label="anterior">‹</button>
@@ -199,8 +236,6 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
       <div id="factBody" class="factBody"></div>
       <div class="dots" id="dots"></div>
     </div>
-
-    <!-- votación -->
     <div class="voteSec">
       <div class="secHead">
         <h2>🗳️ ¿Quién gana? Vota y reta al modelo</h2>
@@ -208,24 +243,23 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
       </div>
       <div class="vgrid" id="votes"><div class="skel">Cargando próximos partidos…</div></div>
     </div>
-
-    <!-- en vivo / hoy -->
     <div class="secHead"><h2>⚽ En vivo y hoy</h2></div>
     <div id="hoyGrid"><div class="skel">Cargando partidos…</div></div>
+    <div id="hoyScorers"></div>
   </section>
 
   <section id="v-cal" hidden></section>
   <section id="v-grupos" hidden></section>
+  <section id="v-equipos" hidden></section>
   <section id="v-pred" hidden></section>
   <section id="v-hist" hidden></section>
 
   <p class="note">
-    Marcadores y tablas en tiempo real (auto-actualización cada 60 s) · Tus votos se guardan solo en tu dispositivo.<br/>
-    Predicciones: modelo propio Elo + Monte Carlo (3.000 simulaciones en tu navegador) · v0.2 · solo con fines educativos.
+    Marcadores, tablas y goleadores en tiempo real (auto-actualización cada 60 s) · Tus votos se guardan solo en tu dispositivo.<br/>
+    Predicciones: modelo propio Elo + Monte Carlo (3.000 simulaciones en tu navegador) · v0.3 · solo con fines educativos.
   </p>
 </div>
 
-<!-- ════════ FIRMA + GANCHO — edita CONFIG abajo ════════ -->
 <div class="hook">
   <span id="firma"></span>
   <span class="q" onclick="document.getElementById('dlg').showModal()" id="ganchoTxt"></span>
@@ -262,7 +296,7 @@ if (CONFIG.whatsapp && !CONFIG.whatsapp.includes("PEGA_AQUI")) {
   document.getElementById('dlgTxt').after(wa);
 }
 
-/* ═════════════ DATOS CURIOSOS (rotan cada 8 s) ═════════════ */
+/* ═════════════ DATOS CURIOSOS ═════════════ */
 const FACTS = [
   ["🏟️","SABÍAS QUE…","El Azteca hace historia triple","Es el único estadio del planeta en albergar la inauguración de TRES Mundiales: 1970, 1986 y 2026. Ahí levantaron la copa Pelé y Maradona."],
   ["⚡","RÉCORD","El gol más rápido: 10.8 segundos","Hakan Şükür (Turquía) marcó a los 10.8 segundos contra Corea del Sur en 2002. Hubo gente que se lo perdió por ir por las palomitas."],
@@ -280,11 +314,9 @@ const FACTS = [
 let factIdx = Math.floor(Math.random() * FACTS.length), factTimer = null;
 function renderFact() {
   const [em, tag, t, x] = FACTS[factIdx];
-  document.getElementById('factBody').innerHTML =
-    `<div class="tag">✦ ${tag}</div><div class="em">${em}</div><h2>${t}</h2><p>${x}</p>`;
-  document.getElementById('factBody').classList.remove('factBody');
-  void document.getElementById('factBody').offsetWidth;
-  document.getElementById('factBody').classList.add('factBody');
+  const fb = document.getElementById('factBody');
+  fb.innerHTML = `<div class="tag">✦ ${tag}</div><div class="em">${em}</div><h2>${t}</h2><p>${x}</p>`;
+  fb.classList.remove('factBody'); void fb.offsetWidth; fb.classList.add('factBody');
   document.getElementById('dots').innerHTML = FACTS.map((_, i) =>
     `<span class="dot${i === factIdx ? " on" : ""}"><i></i></span>`).join("");
 }
@@ -293,18 +325,17 @@ function factPrev() { factIdx = (factIdx - 1 + FACTS.length) % FACTS.length; ren
 function resetFactTimer() { clearInterval(factTimer); factTimer = setInterval(factNext, 8000); }
 renderFact(); resetFactTimer();
 
-/* ═════════════ STORAGE seguro (votos del usuario) ═════════════ */
+/* ═════════════ STORAGE seguro ═════════════ */
 const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
 
-/* ═════════════ ESPN API pública (CORS abierto) ═════════════ */
+/* ═════════════ ESPN API pública ═════════════ */
 const API = "https://site.api.espn.com/apis";
 const LEAGUE = "soccer/fifa.world";
 const RANGO = "20260611-20260719";
 
-/* Ratings Elo aproximados (eloratings.net, ene-2026) */
 const ELO = {"Argentina":2150,"Spain":2170,"France":2030,"England":2050,"Brazil":2020,"Portugal":2010,
 "Netherlands":1990,"Germany":1960,"Colombia":1955,"Belgium":1940,"Croatia":1930,"Uruguay":1920,
 "Morocco":1900,"Japan":1890,"Ecuador":1870,"Switzerland":1860,"Austria":1860,"Mexico":1850,
@@ -315,7 +346,7 @@ const ELO = {"Argentina":2150,"Spain":2170,"France":2030,"England":2050,"Brazil"
 "South Africa":1620,"Jordan":1620,"Cape Verde":1610,"New Zealand":1590,"Haiti":1500,"Curacao":1480};
 const elo = n => ELO[n] || 1650;
 
-const state = { all: [], groups: [], gSel: "K", mc: null, lastUpd: null };
+const state = { all: [], groups: [], gSel: "K", team: null, mc: null, lastUpd: null, scorersReady: false };
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -360,13 +391,56 @@ async function loadAll() {
     state.lastUpd = new Date();
     $("err").innerHTML = "";
     renderAll();
-    if (!state.mc) setTimeout(() => { state.mc = monteCarlo(); renderPred(); }, 80);
+    if (!state.mc) setTimeout(() => { state.mc = monteCarlo(); renderPred(); if(state.team) renderTeamDetail(); }, 80);
+    loadScorers();
   } catch (err) {
-    $("err").innerHTML = `<div class="err">⚠️ No se pudieron cargar los datos en vivo. Si abriste el archivo localmente, súbelo a una URL https o usa un servidor local. Reintentando…</div>`;
+    $("err").innerHTML = `<div class="err">⚠️ No se pudieron cargar los datos en vivo. Si abriste el archivo localmente, súbelo a una URL https. Reintentando…</div>`;
   }
 }
 
-/* ═════════════ MONTE CARLO con estado real ═════════════ */
+/* ═════════════ GOLEADORES: cache incremental de partidos finalizados ═════════════ */
+async function loadScorers() {
+  const cache = store.get("wc26_goals", {});
+  const pendientes = state.all.filter(m => m.state === "post" && !cache[m.id]);
+  let nuevos = false;
+  // máx 4 a la vez para no saturar
+  for (let i = 0; i < pendientes.length; i += 4) {
+    const lote = pendientes.slice(i, i + 4);
+    await Promise.all(lote.map(async m => {
+      try {
+        const r = await fetch(`${API}/site/v2/sports/${LEAGUE}/summary?event=${m.id}`);
+        const s = await r.json();
+        const goles = (s.keyEvents || [])
+          .filter(k => /Goal|Penalty - Scored/.test(k.type?.text || "") && !/Own Goal/.test(k.type?.text || ""))
+          .map(k => ({
+            p: k.participants?.[0]?.athlete?.displayName || "—",
+            t: k.team?.displayName || "",
+            c: k.clock?.displayValue || ""
+          }));
+        cache[m.id] = goles; nuevos = true;
+      } catch (e) {}
+    }));
+  }
+  if (nuevos) store.set("wc26_goals", cache);
+  state.scorersReady = true;
+  renderScorers();
+  if (state.team) renderTeamDetail();
+}
+function allGoals() {
+  const cache = store.get("wc26_goals", {});
+  return Object.values(cache).flat();
+}
+function topScorers(n = 10) {
+  const agg = {};
+  allGoals().forEach(g => {
+    if (g.p === "—") return;
+    agg[g.p] = agg[g.p] || { p: g.p, t: g.t, n: 0 };
+    agg[g.p].n++;
+  });
+  return Object.values(agg).sort((a, b) => b.n - a.n).slice(0, n);
+}
+
+/* ═════════════ MONTE CARLO ═════════════ */
 function monteCarlo(iters = 3000) {
   const teamGroup = {}, basePts = {}, baseDG = {};
   state.groups.forEach(g => g.rows.forEach(r => {
@@ -424,17 +498,17 @@ function cardHTML(m, i) {
   const badge = live ? `<span class="badge live">● ${esc(m.detail)}</span>`
     : ft ? `<span class="badge ft">FINAL</span>` : `<span class="badge pre">${fmtT(m.date)}</span>`;
   const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "⚽";
-  return `<div class="mc${live ? " live" : ""}" style="animation-delay:${i*0.06}s">
+  return `<div class="mc${live ? " live" : ""}" style="animation-delay:${(i||0)*0.06}s">
     <div class="mtop"><span>${fmtD(m.date)}</span>${badge}</div>
-    <div class="row"><span class="tm">${lg(m.hl)}<span class="nm">${esc(m.h)}</span></span>
+    <div class="row"><span class="tm" onclick="goTeam('${esc(m.h)}')">${lg(m.hl)}<span class="nm">${esc(m.h)}</span></span>
       <span class="sc${live?" live":""}">${ft||live ? esc(m.hs) : "–"}</span></div>
-    <div class="row"><span class="tm">${lg(m.al)}<span class="nm">${esc(m.a)}</span></span>
+    <div class="row"><span class="tm" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span class="nm">${esc(m.a)}</span></span>
       <span class="sc${live?" live":""}">${ft||live ? esc(m.as) : "–"}</span></div>
     ${!ft ? duelHTML(m) : ""}
     <div class="ven">📍 ${esc(m.venue)}</div></div>`;
 }
 
-/* ───── VOTACIÓN: tú vs el modelo ───── */
+/* ───── VOTACIÓN ───── */
 function voteCardHTML(m, i) {
   const votes = store.get("wc26_votes", {});
   const myVote = votes[m.id];
@@ -498,6 +572,7 @@ function renderHoy() {
     ? `<div class="grid">${list.map(cardHTML).join("")}</div>`
     : `<div class="skel">No hay partidos en esta ventana. Mira el calendario 📅</div>`;
   renderVotes(); renderScore();
+  $("hoyScorers").innerHTML = scorersHTML(6);
 }
 
 function renderCal() {
@@ -510,22 +585,107 @@ function renderCal() {
   $("v-cal").innerHTML = html + "</div>";
 }
 
-function renderGrupos() {
-  const g = state.groups.find(x => x.name.endsWith(state.gSel)) || state.groups[0];
-  if (!g) { $("v-grupos").innerHTML = `<div class="skel">Cargando grupos…</div>`; return; }
-  const sel = `<div class="gsel">${"ABCDEFGHIJKL".split("").map(x =>
-    `<button class="gbtn${x === state.gSel ? " on" : ""}" data-g="${x}">${x}</button>`).join("")}</div>`;
+/* ───── TABLAS: grupo individual, todos, goleadores ───── */
+function tableHTML(g, compact) {
   const rows = g.rows.map((r, i) => `<tr class="${i < 2 ? "q" : ""}">
-    <td><span class="tm"><img src="${esc(r.logo)}" style="width:20px;height:20px" loading="lazy"/>
+    <td><span class="tm" onclick="goTeam('${esc(r.team)}')"><img src="${esc(r.logo)}" style="width:18px;height:18px" loading="lazy"/>
     <span class="nm">${esc(r.team)}</span></span></td>
-    <td>${r.pj}</td><td>${r.gf}</td><td>${r.gc}</td><td>${r.dg > 0 ? "+" : ""}${r.dg}</td>
+    <td>${r.pj}</td>${compact ? "" : `<td>${r.gf}</td><td>${r.gc}</td>`}<td>${r.dg > 0 ? "+" : ""}${r.dg}</td>
     <td class="pts">${r.pts}</td></tr>`).join("");
-  $("v-grupos").innerHTML = sel + `<div class="gt"><table>
-    <thead><tr><th>SELECCIÓN</th><th>PJ</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>
-    <p class="note">Línea rosa: clasifican directo a 16avos · los 8 mejores terceros también avanzan</p>`;
-  document.querySelectorAll(".gbtn").forEach(b =>
+  return `<div class="gt">${compact ? `<div class="gtitle">${esc(g.name)}</div>` : ""}<table>
+    <thead><tr><th>SELECCIÓN</th><th>PJ</th>${compact ? "" : "<th>GF</th><th>GC</th>"}<th>DG</th><th>PTS</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+function scorersHTML(limit) {
+  const top = topScorers(limit || 10);
+  if (!state.scorersReady && !top.length) return `<div class="gl"><h3 style="color:var(--mag);font-size:14px;margin-bottom:6px">👟 Goleadores del torneo</h3><p class="skel" style="padding:14px 0">Analizando los partidos jugados…</p></div>`;
+  if (!top.length) return `<div class="gl"><h3 style="color:var(--mag);font-size:14px;margin-bottom:6px">👟 Goleadores del torneo</h3><p class="skel" style="padding:14px 0">Aún no hay goles registrados.</p></div>`;
+  return `<div class="gl"><h3 style="color:var(--mag);font-size:14px;margin-bottom:10px">👟 Goleadores del torneo · Botín de Oro provisional</h3>
+    ${top.map((s, i) => `<div class="glrow" style="animation-delay:${i*0.05}s">
+      <span class="rk">${i === 0 ? "🥇" : i + 1}</span>
+      <span class="who">${esc(s.p)}<small>${esc(s.t)}</small></span>
+      <span class="g">${s.n} ⚽</span></div>`).join("")}</div>`;
+}
+function renderGrupos() {
+  const sel = `<div class="gsel">${"ABCDEFGHIJKL".split("").map(x =>
+    `<button class="gbtn${state.gSel === x ? " on" : ""}" data-g="${x}">${x}</button>`).join("")}
+    <button class="gbtn${state.gSel === "*" ? " on" : ""}" data-g="*">TODOS</button></div>`;
+  let body;
+  if (!state.groups.length) body = `<div class="skel">Cargando tablas…</div>`;
+  else if (state.gSel === "*") body = `<div class="allg">${state.groups.map(g => tableHTML(g, true)).join("")}</div>`;
+  else {
+    const g = state.groups.find(x => x.name.endsWith(state.gSel)) || state.groups[0];
+    body = tableHTML(g, false) + `<p class="note" style="margin-top:14px">Línea rosa: clasifican directo a 16avos · los 8 mejores terceros también avanzan</p>`;
+  }
+  $("v-grupos").innerHTML = sel + body + scorersHTML(10);
+  document.querySelectorAll("#v-grupos .gbtn").forEach(b =>
     b.onclick = () => { state.gSel = b.dataset.g; renderGrupos(); });
+}
+
+/* ───── EQUIPOS: perfil completo por país ───── */
+function goTeam(name) {
+  state.team = name;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
+  document.querySelector('.tab[data-t="equipos"]').classList.add("on");
+  ["hoy","cal","grupos","equipos","pred","hist"].forEach(v => $("v-" + v).hidden = v !== "equipos");
+  renderEquipos();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function renderEquipos() {
+  const chips = state.groups.flatMap(g => g.rows).sort((a, b) => a.team.localeCompare(b.team))
+    .map(r => `<div class="tchip${state.team === r.team ? " on" : ""}" onclick="goTeam('${esc(r.team)}')">
+      <img src="${esc(r.logo)}" loading="lazy"/><span>${esc(r.team)}</span></div>`).join("");
+  $("v-equipos").innerHTML = `<div class="tgrid">${chips || '<div class="skel">Cargando selecciones…</div>'}</div><div id="teamDetail"></div>`;
+  renderTeamDetail();
+}
+function renderTeamDetail() {
+  const box = $("teamDetail");
+  if (!box) return;
+  if (!state.team) { box.innerHTML = `<div class="skel">👆 Elige una selección para ver su perfil completo: puntos, posición, próximo rival, resultados, goleadores y probabilidades.</div>`; return; }
+  const T = state.team;
+  let g = null, row = null, pos = 0;
+  state.groups.forEach(gr => gr.rows.forEach((r, i) => { if (r.team === T) { g = gr; row = r; pos = i + 1; } }));
+  if (!row) { box.innerHTML = `<div class="skel">Cargando…</div>`; return; }
+  const mine = state.all.filter(m => m.h === T || m.a === T);
+  const played = mine.filter(m => m.state === "post");
+  const next = mine.find(m => m.state !== "post");
+  const mc = state.mc ? state.mc.find(x => x.t === T) : null;
+  const goals = allGoals().filter(gl => gl.t === T);
+
+  const resHTML = played.length ? played.map(m => {
+    const mePts = m.h === T ? +m.hs : +m.as, rivPts = m.h === T ? +m.as : +m.hs;
+    const riv = m.h === T ? m.a : m.h;
+    const cls = mePts > rivPts ? "w" : mePts < rivPts ? "l" : "e";
+    const letra = mePts > rivPts ? "G" : mePts < rivPts ? "P" : "E";
+    return `<div class="fitem"><span>${fmtD(m.date)} · vs ${esc(riv)}</span>
+      <span class="r ${cls}">${letra} ${mePts}-${rivPts}</span></div>`;
+  }).join("") : `<p class="skel" style="padding:8px 0">Aún no ha debutado en el torneo.</p>`;
+
+  const golesHTML = goals.length ? goals.map(gl =>
+    `<div class="gline"><b>${esc(gl.p)}</b> · minuto ${esc(gl.c)}</div>`).join("")
+    : `<p class="skel" style="padding:8px 0">${state.scorersReady ? "Sin goles registrados todavía." : "Analizando partidos…"}</p>`;
+
+  box.innerHTML = `
+    <div class="thero">
+      <img src="${esc(row.logo)}" alt=""/>
+      <div>
+        <h2>${esc(T)}</h2>
+        <div class="meta">${esc(g.name)} · Posición ${pos}º de 4 ·
+        ${next ? `Próximo rival: <b style="color:var(--txt)">${esc(next.h === T ? next.a : next.h)}</b> (${fmtD(next.date)})` : "Sin próximos partidos"}</div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><b>${row.pts}</b><span>PTS</span></div>
+        <div class="kpi"><b>${row.dg > 0 ? "+" : ""}${row.dg}</b><span>DIF GOL</span></div>
+        <div class="kpi"><b>${mc ? mc.champ.toFixed(1) + "%" : "…"}</b><span>CAMPEÓN</span></div>
+        <div class="kpi"><b>${mc ? mc.semi.toFixed(0) + "%" : "…"}</b><span>SEMIS</span></div>
+      </div>
+    </div>
+    <div class="cols2">
+      ${next ? `<div class="panel"><h3>⏭️ Próximo partido</h3>${cardHTML(next, 0)}</div>` : ""}
+      <div class="panel"><h3>📋 Resultados</h3><div class="flist">${resHTML}</div></div>
+      <div class="panel"><h3>⚽ Goles de ${esc(T)}</h3>${golesHTML}</div>
+      <div class="panel"><h3>📊 Su grupo</h3>${tableHTML(g, true)}</div>
+    </div>`;
 }
 
 function renderPred() {
@@ -538,13 +698,15 @@ function renderPred() {
       <p style="font-size:11px;color:var(--mut);margin-bottom:16px">Probabilidad de campeonar · Monte Carlo 3.000 sims con el estado REAL del torneo</p>
       ${top.map((t, i) => `<div class="trow" style="animation-delay:${i*0.05}s">
         <span class="rk">${i+1}</span><div>
-        <div class="tname">${esc(t.t)} <span style="font-size:10px;color:var(--mut)">semis ${t.semi.toFixed(0)}%</span></div>
+        <div class="tname" style="cursor:pointer" onclick="goTeam('${esc(t.t)}')">${esc(t.t)} <span style="font-size:10px;color:var(--mut)">semis ${t.semi.toFixed(0)}%</span></div>
         <div class="tbar"><i style="width:${t.champ/max*100}%"></i></div></div>
         <span class="pct">${t.champ.toFixed(1)}%</span></div>`).join("")}</div>`;
     })();
   $("v-pred").innerHTML = `<h2 style="font-size:16px;margin-bottom:14px">🔮 Próximos partidos · probabilidad 1X2 (modelo Elo)</h2>
     <div class="grid">${next.map(cardHTML).join("")}</div>${mcHTML}`;
 }
+
+function renderScorers() { renderGrupos(); if ($("hoyScorers")) $("hoyScorers").innerHTML = scorersHTML(6); }
 
 function renderHist() {
   $("v-hist").innerHTML = `<div class="hgrid">${FACTS.map(([e, tag, t, x], i) =>
@@ -560,18 +722,16 @@ function renderTicker() {
 }
 
 function renderAll() {
-  renderTicker(); renderHoy(); renderCal(); renderGrupos(); renderPred(); renderHist();
+  renderTicker(); renderHoy(); renderCal(); renderGrupos(); renderEquipos(); renderPred(); renderHist();
   $("upd").textContent = state.lastUpd ? ` · actualizado ${fmtT(state.lastUpd)}` : "";
 }
 
-/* tabs */
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
   document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
   b.classList.add("on");
-  ["hoy","cal","grupos","pred","hist"].forEach(v => $("v-" + v).hidden = v !== b.dataset.t);
+  ["hoy","cal","grupos","equipos","pred","hist"].forEach(v => $("v-" + v).hidden = v !== b.dataset.t);
 });
 
-/* arranque + auto-refresh */
 loadAll();
 setInterval(loadAll, 60_000);
 </script>
