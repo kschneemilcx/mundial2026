@@ -73,6 +73,22 @@ font-family:'Syne';font-weight:700;margin-bottom:18px}
 .lhGoal{font-size:11px;color:var(--txt)}
 .lhGoal small{color:var(--live)}
 @media (max-width:480px){.lhTeam img{width:46px;height:46px}.lhTeam span{font-size:12px}}
+/* panel idle: último + próximo */
+.liveIdle{background:linear-gradient(135deg,#161033 0%,#1d1340 50%,#150f30 100%);border-color:var(--line)}
+.lhSides{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.lhSide{background:rgba(139,92,246,.07);border:1px solid var(--line);border-radius:14px;padding:15px}
+.lhSideTag{font-size:10px;letter-spacing:.14em;color:var(--mut);font-family:'Syne';font-weight:700;margin-bottom:13px}
+.lhPast .lhSideTag{color:var(--live)} .lhNext .lhSideTag{color:var(--gold)}
+.lhMini{display:flex;align-items:center;justify-content:center;gap:12px}
+.lhMiniTeam{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex:1;min-width:0}
+.lhMiniTeam img{width:38px;height:38px;object-fit:contain}
+.lhMiniTeam b{font-family:'Syne';font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.lhMiniScore{font-family:'Syne';font-weight:800;font-size:22px;color:#fff;flex-shrink:0}
+.lhMiniVs{font-family:'Syne';font-weight:700;color:var(--mut);font-size:12px;flex-shrink:0}
+.lhSideFoot{text-align:center;font-size:10px;color:var(--mut);margin-top:12px}
+.lhCount{text-align:center;font-size:12px;color:var(--gold);margin-top:12px;font-family:'Space Mono'}
+.lhCount b{font-family:'Syne';font-weight:800;font-size:16px;color:#fff}
+@media (max-width:540px){.lhSides{grid-template-columns:1fr}}
 /* carrusel */
 .fact{position:relative;background:linear-gradient(135deg,#1a1233 0%,#241345 55%,#1a0f33 100%);
 border:1px solid var(--line);border-radius:20px;padding:26px 26px 30px;margin-bottom:24px;overflow:hidden;
@@ -702,24 +718,80 @@ function renderLiveHero() {
   const box = $("liveHero");
   if (!box) return;
   const lives = state.all.filter(m => m.state === "in");
-  if (!lives.length) { box.innerHTML = ""; return; }
   const cache = store.get("wc26_goals", {});
-  box.innerHTML = lives.map(m => {
-    const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "<span style='font-size:48px'>⚽</span>";
-    const goles = (cache[m.id] || []).map(g =>
-      `<span class="lhGoal">⚽ ${esc(g.p)} <small>${esc(g.c)}</small></span>`).join("");
-    return `<div class="liveHero">
-      <div class="lhTag"><span class="lhDot"></span>PARTIDO EN VIVO · ${esc(m.detail)}</div>
-      <div class="lhMain">
-        <div class="lhTeam" onclick="goTeam('${esc(m.h)}')">${lg(m.hl)}<span>${esc(m.h)}</span></div>
-        <div class="lhScore"><b>${esc(m.hs)} <span style="color:var(--mut)">·</span> ${esc(m.as)}</b>
-          <span class="min">● ${esc(m.detail)}</span></div>
-        <div class="lhTeam" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span>${esc(m.a)}</span></div>
+  const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "<span style='font-size:48px'>⚽</span>";
+
+  if (lives.length) {
+    box.innerHTML = lives.map(m => {
+      const goles = (cache[m.id] || []).map(g =>
+        `<span class="lhGoal">⚽ ${esc(g.p)} <small>${esc(g.c)}</small></span>`).join("");
+      return `<div class="liveHero">
+        <div class="lhTag"><span class="lhDot"></span>PARTIDO EN VIVO · ${esc(m.detail)}</div>
+        <div class="lhMain">
+          <div class="lhTeam" onclick="goTeam('${esc(m.h)}')">${lg(m.hl)}<span>${esc(m.h)}</span></div>
+          <div class="lhScore"><b>${esc(m.hs)} <span style="color:var(--mut)">·</span> ${esc(m.as)}</b>
+            <span class="min">● ${esc(m.detail)}</span></div>
+          <div class="lhTeam" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span>${esc(m.a)}</span></div>
+        </div>
+        ${goles ? `<div class="lhGoals">${goles}</div>` : ""}
+        <div class="lhVen">📍 ${esc(m.venue)}</div>
+      </div>`;
+    }).join("");
+    return;
+  }
+
+  // Sin partido en vivo: último resultado + cuenta regresiva al próximo
+  const last = [...state.all].filter(m => m.state === "post").pop();
+  const next = state.all.find(m => m.state === "pre");
+  if (!last && !next) { box.innerHTML = ""; return; }
+
+  const lastHTML = last ? `<div class="lhSide lhPast">
+      <div class="lhSideTag">✓ ÚLTIMO RESULTADO</div>
+      <div class="lhMini">
+        <span class="lhMiniTeam" onclick="goTeam('${esc(last.h)}')">${lg(last.hl)}<b>${esc(last.h.split(" ")[0])}</b></span>
+        <span class="lhMiniScore">${esc(last.hs)}-${esc(last.as)}</span>
+        <span class="lhMiniTeam" onclick="goTeam('${esc(last.a)}')">${lg(last.al)}<b>${esc(last.a.split(" ")[0])}</b></span>
       </div>
-      ${goles ? `<div class="lhGoals">${goles}</div>` : ""}
-      <div class="lhVen">📍 ${esc(m.venue)}</div>
-    </div>`;
-  }).join("");
+      <div class="lhSideFoot">${fmtD(last.date)} · Final</div>
+    </div>` : "";
+
+  const nextHTML = next ? `<div class="lhSide lhNext">
+      <div class="lhSideTag">⏱️ PRÓXIMO PARTIDO</div>
+      <div class="lhMini">
+        <span class="lhMiniTeam" onclick="goTeam('${esc(next.h)}')">${lg(next.hl)}<b>${esc(next.h.split(" ")[0])}</b></span>
+        <span class="lhMiniVs">vs</span>
+        <span class="lhMiniTeam" onclick="goTeam('${esc(next.a)}')">${lg(next.al)}<b>${esc(next.a.split(" ")[0])}</b></span>
+      </div>
+      <div class="lhCount" data-kick="${next.date.getTime()}">Calculando…</div>
+    </div>` : "";
+
+  box.innerHTML = `<div class="liveHero liveIdle">
+    <div class="lhTag" style="color:var(--vio2)"><span class="lhDot" style="background:var(--vio2);animation:none"></span>SIGUE EL MUNDIAL EN VIVO</div>
+    <div class="lhSides">${lastHTML}${nextHTML}</div>
+  </div>`;
+  tickCountdown();
+}
+
+let _cdTimer = null;
+function tickCountdown() {
+  const el = document.querySelector(".lhCount");
+  if (!el) { if (_cdTimer) { clearInterval(_cdTimer); _cdTimer = null; } return; }
+  const update = () => {
+    const el = document.querySelector(".lhCount");
+    if (!el) { clearInterval(_cdTimer); _cdTimer = null; return; }
+    const diff = +el.dataset.kick - Date.now();
+    if (diff <= 0) { el.innerHTML = `<span style="color:var(--live)">● ¡Arrancó!</span>`; return; }
+    const h = Math.floor(diff / 3.6e6);
+    const m = Math.floor((diff % 3.6e6) / 6e4);
+    const s = Math.floor((diff % 6e4) / 1000);
+    const pad = n => String(n).padStart(2, "0");
+    el.innerHTML = h > 0
+      ? `Empieza en <b>${h}h ${pad(m)}m</b>`
+      : `Empieza en <b>${pad(m)}:${pad(s)}</b>`;
+  };
+  update();
+  if (_cdTimer) clearInterval(_cdTimer);
+  _cdTimer = setInterval(update, 1000);
 }
 
 function renderHoy() {
