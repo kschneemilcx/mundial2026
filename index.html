@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mundial 2026 Live · Datos en tiempo real</title>
+<meta name="description" content="Resultados en vivo, grupos, votaciones y predicciones del Mundial 2026. Hecho con 💜 para la comunidad." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --bg:#060410;--bg2:#0d0920;
+  --card:#151028;--card2:#1d1535;--line:#2e2452;
+  --vio:#8b5cf6;--vio2:#a78bfa;--mag:#e879f9;
+  --txt:#f2eeff;--mut:#9c93bd;
+  --live:#4ade80;--gold:#fbbf24;--red:#fb7185;
+  --grad:linear-gradient(92deg,#a78bfa 0%,#e879f9 60%,#fbbf24 130%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--bg);color:var(--txt);font-family:'Space Mono',monospace;overflow-x:hidden}
+/* orbes de fondo */
+body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(110px);z-index:0;pointer-events:none}
+body::before{width:520px;height:520px;background:rgba(139,92,246,.16);top:-180px;left:-120px;animation:float1 16s ease-in-out infinite}
+body::after{width:460px;height:460px;background:rgba(232,121,249,.10);bottom:-160px;right:-120px;animation:float2 20s ease-in-out infinite}
+@keyframes float1{50%{transform:translate(60px,40px)}}
+@keyframes float2{50%{transform:translate(-50px,-60px)}}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 16px 96px}
+h1,h2,h3{font-family:'Syne',sans-serif}
+a{color:var(--vio2)}
+/* ticker */
+.ticker{position:relative;z-index:1;overflow:hidden;border-bottom:1px solid var(--line);background:rgba(10,7,22,.9);white-space:nowrap;backdrop-filter:blur(6px)}
+.tk{display:inline-block;padding:8px 0;animation:scroll 45s linear infinite;font-size:12px;color:var(--mut)}
+.tk b{color:var(--mag)} .tk .lv{color:var(--live)}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* header */
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:34px 0 8px}
+.hdr h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.025em;line-height:.95;
+background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.liveDot{font-size:10px;border:1px solid var(--live);color:var(--live);padding:4px 11px;border-radius:99px;
+letter-spacing:.14em;animation:blink 1.6s ease infinite;background:rgba(74,222,128,.06)}
+.sub{color:var(--mut);font-size:12px;margin:8px 0 20px}
+.upd{font-size:10px;opacity:.8}
+/* tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{background:none;border:none;color:var(--mut);font-family:'Space Mono';font-size:13px;padding:11px 14px;
+cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab:hover{color:var(--txt)} .tab.on{color:var(--mag);border-image:var(--grad) 1;border-bottom:2px solid}
+/* ───── CARRUSEL DE DATOS CURIOSOS (firma de la página) ───── */
+.fact{position:relative;background:linear-gradient(135deg,#1a1233 0%,#241345 55%,#1a0f33 100%);
+border:1px solid var(--line);border-radius:20px;padding:26px 26px 30px;margin-bottom:24px;overflow:hidden;
+box-shadow:0 14px 50px rgba(139,92,246,.13)}
+.fact::before{content:"";position:absolute;inset:-1px;border-radius:20px;padding:1px;
+background:linear-gradient(120deg,rgba(167,139,250,.55),rgba(232,121,249,.25),transparent 60%);
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.fact .tag{font-size:10px;letter-spacing:.22em;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.fact .em{font-size:38px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 14px rgba(232,121,249,.35))}
+.fact h2{font-size:clamp(18px,3.4vw,26px);font-weight:800;margin-bottom:10px;line-height:1.18}
+.fact p{font-size:13.5px;line-height:1.75;color:var(--mut);max-width:680px}
+.fact .ctr{position:absolute;right:22px;top:22px;display:flex;gap:8px;align-items:center}
+.fact .nav{background:rgba(167,139,250,.12);border:1px solid var(--line);color:var(--vio2);width:32px;height:32px;
+border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
+.fact .nav:hover{background:var(--vio);color:#fff}
+.dots{display:flex;gap:5px;margin-top:18px}
+.dot{height:3px;flex:1;max-width:34px;background:var(--line);border-radius:99px;overflow:hidden}
+.dot i{display:block;height:100%;width:0;background:var(--grad)}
+.dot.on i{animation:fill 8s linear forwards}
+@keyframes fill{to{width:100%}}
+.factBody{animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* ───── VOTACIÓN ───── */
+.voteSec{margin-bottom:26px}
+.secHead{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.secHead h2{font-size:17px}
+.score{font-size:11px;color:var(--gold);border:1px solid rgba(251,191,36,.4);padding:4px 11px;border-radius:99px;background:rgba(251,191,36,.06)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.vc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;animation:up .5s ease both;transition:.2s}
+.vc:hover{border-color:var(--vio);transform:translateY(-2px)}
+.vtop{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:12px;letter-spacing:.05em}
+.vteams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.vt{display:flex;flex-direction:column;align-items:center;gap:7px;flex:1;min-width:0}
+.vt img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.vt span{font-size:11.5px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.vs{font-family:'Syne';font-weight:800;color:var(--mut);font-size:13px}
+.vbtns{display:grid;grid-template-columns:1fr .7fr 1fr;gap:7px}
+.vb{background:var(--card2);border:1px solid var(--line);color:var(--txt);font-family:'Space Mono';font-size:11.5px;
+padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
+.vb:hover{border-color:var(--mag);color:var(--mag)}
+.vb.sel{background:var(--vio);border-color:var(--vio);color:#fff;font-weight:700}
+.vres{margin-top:12px;animation:fadeIn .4s ease}
+.vmsg{font-size:11px;margin-top:9px;line-height:1.6}
+.vmsg.ok{color:var(--live)} .vmsg.dare{color:var(--gold)}
+/* duel bar */
+.duel{margin-top:12px}
+.dlab{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:4px}
+.dbar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--line)}
+.dbar i{display:block;height:100%;transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.dbar .ph{background:linear-gradient(90deg,var(--vio),var(--mag))}
+.dbar .pd{background:#43386b}
+.dbar .pa{background:#6d5aa8}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* match cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+animation:up .5s ease both;transition:.2s}
+.mc:hover{border-color:var(--vio);transform:translateY(-2px)}
+.mc.live{border-color:rgba(74,222,128,.5);box-shadow:0 0 30px rgba(74,222,128,.09)}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.mtop{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:12px;letter-spacing:.05em}
+.badge{font-weight:700} .badge.live{color:var(--live);animation:blink 1.4s ease infinite}
+.badge.ft{color:var(--mut)} .badge.pre{color:var(--vio2)}
+@keyframes blink{50%{opacity:.45}}
+.row{display:flex;align-items:center;justify-content:space-between;margin:7px 0;font-size:14.5px}
+.tm{display:flex;align-items:center;gap:9px;min-width:0}
+.tm img{width:22px;height:22px;object-fit:contain}
+.tm .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc{font-family:'Syne';font-weight:800;font-size:22px}
+.sc.live{color:var(--live)}
+.ven{font-size:10px;color:var(--mut);margin-top:10px}
+.dayHead{font-family:'Syne';font-weight:700;font-size:14px;margin:26px 0 12px;letter-spacing:.04em;
+background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
+/* groups */
+.gsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.gbtn{background:var(--card);border:1px solid var(--line);color:var(--mut);width:38px;height:38px;
+border-radius:10px;font-family:'Syne';font-weight:700;cursor:pointer;transition:.15s}
+.gbtn:hover{border-color:var(--mag);color:var(--mag)} .gbtn.on{background:var(--vio);color:#fff;border-color:var(--vio)}
+.gt{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow-x:auto}
+.gt table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+.gt th{font-size:10px;color:var(--mut);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);letter-spacing:.1em}
+.gt td{padding:12px 14px;border-bottom:1px solid var(--line)}
+.gt tr:last-child td{border:none}
+.gt tr.q td:first-child{box-shadow:inset 3px 0 0 var(--mag)}
+.pts{font-family:'Syne';font-weight:800;color:var(--gold)}
+/* title race */
+.tr{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
+.trow{display:grid;grid-template-columns:30px 1fr 58px;align-items:center;gap:12px;padding:9px 0;
+border-bottom:1px dashed var(--line);animation:up .5s ease both}
+.trow:last-child{border:none}
+.rk{font-family:'Syne';font-weight:800;color:var(--mut)} .trow:first-child .rk{color:var(--gold)}
+.tname{font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--vio),var(--mag));
+border-radius:99px;animation:grow 1.1s cubic-bezier(.2,.8,.2,1) both}
+.trow:first-child .tbar i{background:linear-gradient(90deg,#b8860b,var(--gold))}
+.pct{font-family:'Syne';font-weight:800;text-align:right;font-size:15px}
+/* historia */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.hc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;animation:up .5s ease both;transition:.2s}
+.hc:hover{border-color:var(--vio);transform:translateY(-2px)}
+.hc .em{font-size:26px;margin-bottom:10px}
+.hc h3{font-size:15px;margin-bottom:8px;color:var(--mag)}
+.hc p{font-size:12.5px;line-height:1.7;color:var(--mut)}
+/* hook */
+.hook{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(92deg,#1c1238,#2a1650 60%,#321a52);
+border-top:1px solid var(--vio);padding:12px 16px;display:flex;align-items:center;justify-content:center;
+gap:12px;flex-wrap:wrap;font-size:12px;z-index:50;backdrop-filter:blur(8px)}
+.hook b{font-family:'Syne';background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hook .q{color:var(--gold);cursor:pointer;text-decoration:underline dotted}
+.note{font-size:10px;color:var(--mut);margin-top:28px;text-align:center;opacity:.75;line-height:1.9}
+.err{background:#2a1024;border:1px solid var(--red);color:#ffc9d4;border-radius:12px;padding:14px;font-size:12px;margin-bottom:16px}
+.skel{color:var(--mut);font-size:13px;padding:30px 0;text-align:center}
+dialog{background:var(--card2);color:var(--txt);border:1px solid var(--vio);border-radius:18px;
+padding:28px;max-width:430px;font-family:'Space Mono';font-size:13px;line-height:1.8}
+dialog::backdrop{background:rgba(4,2,10,.85)}
+dialog h3{font-size:18px;margin-bottom:12px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+dialog button{margin-top:16px;background:var(--vio);border:none;color:#fff;font-family:'Space Mono';
+padding:10px 20px;border-radius:10px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="ticker"><span class="tk" id="ticker">Cargando marcadores en vivo…</span></div>
+
+<div class="wrap">
+  <header class="hdr">
+    <h1>MUNDIAL 2026 LIVE</h1>
+    <span class="liveDot">● DATOS EN VIVO</span>
+  </header>
+  <p class="sub">48 selecciones · 104 partidos · 🇺🇸🇲🇽🇨🇦 · Horarios en tu zona horaria
+    <span class="upd" id="upd"></span></p>
+
+  <nav class="tabs">
+    <button class="tab on" data-t="hoy">⚽ Hoy / En vivo</button>
+    <button class="tab" data-t="cal">📅 Calendario</button>
+    <button class="tab" data-t="grupos">📊 Grupos</button>
+    <button class="tab" data-t="pred">🔮 Predicciones</button>
+    <button class="tab" data-t="hist">📜 Historia</button>
+  </nav>
+
+  <div id="err"></div>
+
+  <section id="v-hoy">
+    <!-- carrusel de datos curiosos -->
+    <div class="fact" id="fact">
+      <div class="ctr">
+        <button class="nav" onclick="factPrev()" aria-label="anterior">‹</button>
+        <button class="nav" onclick="factNext()" aria-label="siguiente">›</button>
+      </div>
+      <div id="factBody" class="factBody"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+
+    <!-- votación -->
+    <div class="voteSec">
+      <div class="secHead">
+        <h2>🗳️ ¿Quién gana? Vota y reta al modelo</h2>
+        <span class="score" id="myScore"></span>
+      </div>
+      <div class="vgrid" id="votes"><div class="skel">Cargando próximos partidos…</div></div>
+    </div>
+
+    <!-- en vivo / hoy -->
+    <div class="secHead"><h2>⚽ En vivo y hoy</h2></div>
+    <div id="hoyGrid"><div class="skel">Cargando partidos…</div></div>
+  </section>
+
+  <section id="v-cal" hidden></section>
+  <section id="v-grupos" hidden></section>
+  <section id="v-pred" hidden></section>
+  <section id="v-hist" hidden></section>
+
+  <p class="note">
+    Marcadores y tablas en tiempo real (auto-actualización cada 60 s) · Tus votos se guardan solo en tu dispositivo.<br/>
+    Predicciones: modelo propio Elo + Monte Carlo (3.000 simulaciones en tu navegador) · v0.2 · solo con fines educativos.
+  </p>
+</div>
+
+<!-- ════════ FIRMA + GANCHO — edita CONFIG abajo ════════ -->
+<div class="hook">
+  <span id="firma"></span>
+  <span class="q" onclick="document.getElementById('dlg').showModal()" id="ganchoTxt"></span>
+</div>
+<dialog id="dlg">
+  <h3>👀 ¿Cómo está hecho esto?</h3>
+  <p id="dlgTxt"></p>
+  <button onclick="document.getElementById('dlg').close()">Cerrar</button>
+</dialog>
+
+<script>
+/* ═════════════ CONFIG — PERSONALIZA AQUÍ ═════════════ */
+const CONFIG = {
+  autor: "Klaus",
+  firma: "Hecho con 💜 por Klaus, para mi comunidad",
+  gancho: "¿Quieres aprender a construir cosas así? Pregúntame cómo 👀",
+  mensaje: `Este dashboard consume datos en tiempo real, calcula probabilidades con un modelo Elo
+y simula el torneo completo 3.000 veces con Monte Carlo… directamente en tu navegador,
+sin servidores y con costo $0.
+
+Si te da curiosidad cómo se construye algo así — APIs en vivo, modelos de probabilidad,
+automatización, deploy gratis — escríbeme. Eso es exactamente lo que enseño. 🚀`,
+  whatsapp: "PEGA_AQUI_TU_LINK",   // ← link de invitación de tu grupo (https://chat.whatsapp.com/XXXX)
+  whatsappTexto: "💬 Únete al grupo de WhatsApp"
+};
+document.getElementById('firma').innerHTML = `<b>${CONFIG.firma}</b>`;
+document.getElementById('ganchoTxt').textContent = CONFIG.gancho;
+document.getElementById('dlgTxt').innerText = CONFIG.mensaje;
+if (CONFIG.whatsapp && !CONFIG.whatsapp.includes("PEGA_AQUI")) {
+  const wa = document.createElement('a');
+  wa.href = CONFIG.whatsapp; wa.target = "_blank"; wa.rel = "noopener";
+  wa.textContent = CONFIG.whatsappTexto;
+  wa.style.cssText = "display:block;text-align:center;margin-top:18px;background:#25D366;color:#06210f;font-family:Syne,sans-serif;font-weight:700;font-size:14px;padding:13px 20px;border-radius:12px;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.35)";
+  document.getElementById('dlgTxt').after(wa);
+}
+
+/* ═════════════ DATOS CURIOSOS (rotan cada 8 s) ═════════════ */
+const FACTS = [
+  ["🏟️","SABÍAS QUE…","El Azteca hace historia triple","Es el único estadio del planeta en albergar la inauguración de TRES Mundiales: 1970, 1986 y 2026. Ahí levantaron la copa Pelé y Maradona."],
+  ["⚡","RÉCORD","El gol más rápido: 10.8 segundos","Hakan Şükür (Turquía) marcó a los 10.8 segundos contra Corea del Sur en 2002. Hubo gente que se lo perdió por ir por las palomitas."],
+  ["👑","LEYENDA","Campeón del mundo a los 17 años","Pelé ganó su primer Mundial en 1958 con 17 años… y sigue siendo el único jugador de la historia con TRES Copas del Mundo."],
+  ["🇨🇴","ORGULLO CAFETERO","El techo de Colombia: Brasil 2014","Cuartos de final, James Botín de Oro con 6 goles y el Premio Puskás por la volea ante Uruguay. ¿Se rompe el techo este año?"],
+  ["🥅","GOLEADOR ETERNO","Klose: 16 goles y contando… nadie","Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles en 4 ediciones. Messi quedó en 13."],
+  ["😱","LA TRAGEDIA","El Maracanazo, 1950","Uruguay silenció a ~200.000 brasileños en el Maracaná ganando la final 2-1. Brasil estrenó después otra camiseta: nació la 'verdeamarela'."],
+  ["🆕","HISTÓRICO","El Mundial más grande de la historia","Primera edición con 48 selecciones, 12 grupos, 104 partidos y 3 países anfitriones. Debutan Curazao, Cabo Verde, Jordania y Uzbekistán."],
+  ["🏆","EL TROFEO","6.1 kg de oro de 18 quilates","La copa actual se entrega desde 1974. El campeón se lleva una réplica: la original vive en Zúrich, en la sede de la FIFA."],
+  ["🎯","FRANCOTIRADOR","13 goles en UN solo Mundial","Just Fontaine (Francia) marcó 13 goles en Suecia 1958. Un récord que lleva más de 65 años sin que nadie se le acerque."],
+  ["🔥","FINAL ÉPICA","El hat-trick de Mbappé… y perdió","En Catar 2022 Mbappé marcó 3 goles en la final, el primero en hacerlo desde Geoff Hurst en 1966… y aun así Argentina campeonó por penales."],
+  ["🇲🇽","LA MALDICIÓN","El quinto partido","México cayó en octavos en 7 Mundiales consecutivos (1994–2018). Jugar en casa en 2026 es su mejor chance de romperla desde 1986."],
+  ["📐","NERD ALERT","¿Cómo predice esta página?","Usamos ratings Elo (nacidos en el ajedrez) + simulación Monte Carlo: tu navegador juega el torneo completo 3.000 veces. Igual que en el trading cuantitativo. 😉"],
+];
+let factIdx = Math.floor(Math.random() * FACTS.length), factTimer = null;
+function renderFact() {
+  const [em, tag, t, x] = FACTS[factIdx];
+  document.getElementById('factBody').innerHTML =
+    `<div class="tag">✦ ${tag}</div><div class="em">${em}</div><h2>${t}</h2><p>${x}</p>`;
+  document.getElementById('factBody').classList.remove('factBody');
+  void document.getElementById('factBody').offsetWidth;
+  document.getElementById('factBody').classList.add('factBody');
+  document.getElementById('dots').innerHTML = FACTS.map((_, i) =>
+    `<span class="dot${i === factIdx ? " on" : ""}"><i></i></span>`).join("");
+}
+function factNext() { factIdx = (factIdx + 1) % FACTS.length; renderFact(); resetFactTimer(); }
+function factPrev() { factIdx = (factIdx - 1 + FACTS.length) % FACTS.length; renderFact(); resetFactTimer(); }
+function resetFactTimer() { clearInterval(factTimer); factTimer = setInterval(factNext, 8000); }
+renderFact(); resetFactTimer();
+
+/* ═════════════ STORAGE seguro (votos del usuario) ═════════════ */
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ═════════════ ESPN API pública (CORS abierto) ═════════════ */
+const API = "https://site.api.espn.com/apis";
+const LEAGUE = "soccer/fifa.world";
+const RANGO = "20260611-20260719";
+
+/* Ratings Elo aproximados (eloratings.net, ene-2026) */
+const ELO = {"Argentina":2150,"Spain":2170,"France":2030,"England":2050,"Brazil":2020,"Portugal":2010,
+"Netherlands":1990,"Germany":1960,"Colombia":1955,"Belgium":1940,"Croatia":1930,"Uruguay":1920,
+"Morocco":1900,"Japan":1890,"Ecuador":1870,"Switzerland":1860,"Austria":1860,"Mexico":1850,
+"Norway":1850,"United States":1840,"Senegal":1840,"Turkey":1830,"Algeria":1800,"Sweden":1800,
+"Iran":1790,"South Korea":1790,"Canada":1780,"Paraguay":1780,"Australia":1760,"Ivory Coast":1760,
+"Czechia":1750,"Egypt":1750,"Tunisia":1740,"Scotland":1740,"Ghana":1730,"Bosnia-Herzegovina":1700,
+"Uzbekistan":1700,"Saudi Arabia":1690,"Panama":1680,"DR Congo":1680,"Iraq":1650,"Qatar":1640,
+"South Africa":1620,"Jordan":1620,"Cape Verde":1610,"New Zealand":1590,"Haiti":1500,"Curacao":1480};
+const elo = n => ELO[n] || 1650;
+
+const state = { all: [], groups: [], gSel: "K", mc: null, lastUpd: null };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function probs(h, a) {
+  const diff = elo(h) - elo(a);
+  const e = 1 / (1 + Math.pow(10, -diff / 400));
+  const pD = Math.max(0.10, 0.29 - Math.abs(diff) * 0.00045);
+  return { h: e * (1 - pD), d: pD, a: (1 - e) * (1 - pD) };
+}
+
+function parseEvent(e) {
+  const c = e.competitions[0];
+  const home = c.competitors.find(x => x.homeAway === "home") || c.competitors[0];
+  const away = c.competitors.find(x => x.homeAway === "away") || c.competitors[1];
+  return {
+    id: e.id, date: new Date(e.date),
+    h: home.team.displayName, a: away.team.displayName,
+    hl: home.team.logo || "", al: away.team.logo || "",
+    hs: home.score, as: away.score,
+    state: e.status.type.state, detail: e.status.type.shortDetail,
+    venue: (c.venue && c.venue.fullName) || ""
+  };
+}
+
+async function loadAll() {
+  try {
+    const [calR, stR] = await Promise.all([
+      fetch(`${API}/site/v2/sports/${LEAGUE}/scoreboard?dates=${RANGO}&limit=200`),
+      fetch(`${API}/v2/sports/${LEAGUE}/standings`)
+    ]);
+    const cal = await calR.json(), st = await stR.json();
+    state.all = (cal.events || []).map(parseEvent).sort((x, y) => x.date - y.date);
+    state.groups = (st.children || []).map(g => ({
+      name: g.name,
+      rows: g.standings.entries.map(en => {
+        const s = Object.fromEntries(en.stats.map(x => [x.name, x.value]));
+        return { team: en.team.displayName, logo: en.team.logos?.[0]?.href || "",
+          pj: s.gamesPlayed||0, pts: s.points||0, gf: s.pointsFor||0, gc: s.pointsAgainst||0,
+          dg: (s.pointsFor||0)-(s.pointsAgainst||0) };
+      })
+    }));
+    state.lastUpd = new Date();
+    $("err").innerHTML = "";
+    renderAll();
+    if (!state.mc) setTimeout(() => { state.mc = monteCarlo(); renderPred(); }, 80);
+  } catch (err) {
+    $("err").innerHTML = `<div class="err">⚠️ No se pudieron cargar los datos en vivo. Si abriste el archivo localmente, súbelo a una URL https o usa un servidor local. Reintentando…</div>`;
+  }
+}
+
+/* ═════════════ MONTE CARLO con estado real ═════════════ */
+function monteCarlo(iters = 3000) {
+  const teamGroup = {}, basePts = {}, baseDG = {};
+  state.groups.forEach(g => g.rows.forEach(r => {
+    teamGroup[r.team] = g.name; basePts[r.team] = r.pts; baseDG[r.team] = r.dg;
+  }));
+  const pending = state.all.filter(m => m.state !== "post" && teamGroup[m.h] && teamGroup[m.a]
+    && teamGroup[m.h] === teamGroup[m.a]);
+  const teams = Object.keys(teamGroup);
+  const wins = {}, semis = {}; teams.forEach(t => { wins[t] = 0; semis[t] = 0; });
+  const beat = (x, y) => { const p = probs(x, y); return Math.random() < p.h + p.d / 2 ? x : y; };
+  for (let k = 0; k < iters; k++) {
+    const pts = { ...basePts }, dg = { ...baseDG };
+    for (const m of pending) {
+      const p = probs(m.h, m.a), r = Math.random();
+      if (r < p.h) { pts[m.h] += 3; dg[m.h] += 1.4; dg[m.a] -= 1.4; }
+      else if (r < p.h + p.d) { pts[m.h]++; pts[m.a]++; }
+      else { pts[m.a] += 3; dg[m.a] += 1.4; dg[m.h] -= 1.4; }
+    }
+    const qual = [], thirds = [];
+    state.groups.forEach(g => {
+      const order = g.rows.map(r => r.team)
+        .sort((a, b) => pts[b] - pts[a] || dg[b] - dg[a] || Math.random() - 0.5);
+      qual.push(order[0], order[1]); thirds.push(order[2]);
+    });
+    thirds.sort((a, b) => pts[b] - pts[a] || dg[b] - dg[a] || Math.random() - 0.5);
+    let round = [...qual, ...thirds.slice(0, 8)];
+    round.sort(() => Math.random() - 0.5);
+    while (round.length > 1) {
+      if (round.length === 4) round.forEach(t => semis[t]++);
+      const nx = [];
+      for (let j = 0; j < round.length; j += 2) nx.push(beat(round[j], round[j + 1]));
+      round = nx;
+    }
+    wins[round[0]]++;
+  }
+  return teams.map(t => ({ t, champ: wins[t] / iters * 100, semi: semis[t] / iters * 100 }))
+    .sort((a, b) => b.champ - a.champ);
+}
+
+/* ═════════════ RENDER ═════════════ */
+const fmtT = d => d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+const fmtD = d => d.toLocaleDateString("es", { weekday: "short", day: "numeric", month: "short" });
+
+function duelHTML(m) {
+  const p = probs(m.h, m.a), f = x => Math.round(x * 100);
+  return `<div class="duel"><div class="dlab">
+    <span>${f(p.h)}%</span><span>E ${f(p.d)}%</span><span>${f(p.a)}%</span></div>
+    <div class="dbar"><i class="ph" style="width:${p.h*100}%"></i>
+    <i class="pd" style="width:${p.d*100}%;animation-delay:.15s"></i>
+    <i class="pa" style="width:${p.a*100}%;animation-delay:.3s"></i></div></div>`;
+}
+
+function cardHTML(m, i) {
+  const live = m.state === "in", ft = m.state === "post";
+  const badge = live ? `<span class="badge live">● ${esc(m.detail)}</span>`
+    : ft ? `<span class="badge ft">FINAL</span>` : `<span class="badge pre">${fmtT(m.date)}</span>`;
+  const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "⚽";
+  return `<div class="mc${live ? " live" : ""}" style="animation-delay:${i*0.06}s">
+    <div class="mtop"><span>${fmtD(m.date)}</span>${badge}</div>
+    <div class="row"><span class="tm">${lg(m.hl)}<span class="nm">${esc(m.h)}</span></span>
+      <span class="sc${live?" live":""}">${ft||live ? esc(m.hs) : "–"}</span></div>
+    <div class="row"><span class="tm">${lg(m.al)}<span class="nm">${esc(m.a)}</span></span>
+      <span class="sc${live?" live":""}">${ft||live ? esc(m.as) : "–"}</span></div>
+    ${!ft ? duelHTML(m) : ""}
+    <div class="ven">📍 ${esc(m.venue)}</div></div>`;
+}
+
+/* ───── VOTACIÓN: tú vs el modelo ───── */
+function voteCardHTML(m, i) {
+  const votes = store.get("wc26_votes", {});
+  const myVote = votes[m.id];
+  const p = probs(m.h, m.a);
+  const lg = u => u ? `<img src="${esc(u)}" alt=""/>` : "<span style='font-size:34px'>⚽</span>";
+  const modelPick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
+  const pickName = k => k === "h" ? esc(m.h) : k === "a" ? esc(m.a) : "Empate";
+  let result = "";
+  if (myVote) {
+    const agree = myVote === modelPick;
+    result = `<div class="vres">${duelHTML(m)}
+      <div class="vmsg ${agree ? "ok" : "dare"}">
+        ${agree
+          ? `✅ Coincides con el modelo: <b>${pickName(modelPick)}</b> es el favorito (${Math.round(Math.max(p.h,p.d,p.a)*100)}%).`
+          : `😏 Te atreviste contra el modelo. Tú: <b>${pickName(myVote)}</b> · Modelo: <b>${pickName(modelPick)}</b>. Veremos quién acierta…`}
+      </div></div>`;
+  }
+  return `<div class="vc" style="animation-delay:${i*0.07}s">
+    <div class="vtop"><span>${fmtD(m.date)} · ${fmtT(m.date)}</span><span>📍 ${esc(m.venue)}</span></div>
+    <div class="vteams">
+      <div class="vt">${lg(m.hl)}<span>${esc(m.h)}</span></div>
+      <span class="vs">VS</span>
+      <div class="vt">${lg(m.al)}<span>${esc(m.a)}</span></div>
+    </div>
+    <div class="vbtns">
+      <button class="vb${myVote==="h"?" sel":""}" onclick="vote('${m.id}','h')">${esc(m.h.split(" ")[0])}</button>
+      <button class="vb${myVote==="d"?" sel":""}" onclick="vote('${m.id}','d')">Empate</button>
+      <button class="vb${myVote==="a"?" sel":""}" onclick="vote('${m.id}','a')">${esc(m.a.split(" ")[0])}</button>
+    </div>
+    ${result}</div>`;
+}
+function vote(id, pick) {
+  const votes = store.get("wc26_votes", {});
+  votes[id] = pick; store.set("wc26_votes", votes);
+  renderVotes(); renderScore();
+}
+function renderVotes() {
+  const next = state.all.filter(m => m.state === "pre").slice(0, 4);
+  $("votes").innerHTML = next.length
+    ? next.map(voteCardHTML).join("")
+    : `<div class="skel">No hay partidos próximos para votar.</div>`;
+}
+function renderScore() {
+  const votes = store.get("wc26_votes", {});
+  let ok = 0, tot = 0;
+  state.all.filter(m => m.state === "post" && votes[m.id]).forEach(m => {
+    tot++;
+    const real = +m.hs > +m.as ? "h" : +m.hs < +m.as ? "a" : "d";
+    if (votes[m.id] === real) ok++;
+  });
+  $("myScore").textContent = tot ? `🎯 Tus aciertos: ${ok}/${tot}` : `🎯 Vota y mide tu puntería`;
+}
+
+function renderHoy() {
+  const now = new Date(), in36h = new Date(now.getTime() + 36 * 3.6e6);
+  const lives = state.all.filter(m => m.state === "in");
+  const today = state.all.filter(m => m.state !== "in" &&
+    m.date > new Date(now.getTime() - 14 * 3.6e6) && m.date < in36h);
+  const list = [...lives, ...today];
+  $("hoyGrid").innerHTML = list.length
+    ? `<div class="grid">${list.map(cardHTML).join("")}</div>`
+    : `<div class="skel">No hay partidos en esta ventana. Mira el calendario 📅</div>`;
+  renderVotes(); renderScore();
+}
+
+function renderCal() {
+  let html = "", lastDay = "";
+  state.all.forEach((m, i) => {
+    const d = fmtD(m.date);
+    if (d !== lastDay) { if (lastDay) html += "</div>"; html += `<div class="dayHead">${d}</div><div class="grid">`; lastDay = d; }
+    html += cardHTML(m, i % 8);
+  });
+  $("v-cal").innerHTML = html + "</div>";
+}
+
+function renderGrupos() {
+  const g = state.groups.find(x => x.name.endsWith(state.gSel)) || state.groups[0];
+  if (!g) { $("v-grupos").innerHTML = `<div class="skel">Cargando grupos…</div>`; return; }
+  const sel = `<div class="gsel">${"ABCDEFGHIJKL".split("").map(x =>
+    `<button class="gbtn${x === state.gSel ? " on" : ""}" data-g="${x}">${x}</button>`).join("")}</div>`;
+  const rows = g.rows.map((r, i) => `<tr class="${i < 2 ? "q" : ""}">
+    <td><span class="tm"><img src="${esc(r.logo)}" style="width:20px;height:20px" loading="lazy"/>
+    <span class="nm">${esc(r.team)}</span></span></td>
+    <td>${r.pj}</td><td>${r.gf}</td><td>${r.gc}</td><td>${r.dg > 0 ? "+" : ""}${r.dg}</td>
+    <td class="pts">${r.pts}</td></tr>`).join("");
+  $("v-grupos").innerHTML = sel + `<div class="gt"><table>
+    <thead><tr><th>SELECCIÓN</th><th>PJ</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="note">Línea rosa: clasifican directo a 16avos · los 8 mejores terceros también avanzan</p>`;
+  document.querySelectorAll(".gbtn").forEach(b =>
+    b.onclick = () => { state.gSel = b.dataset.g; renderGrupos(); });
+}
+
+function renderPred() {
+  const next = state.all.filter(m => m.state === "pre").slice(0, 9);
+  const mcHTML = !state.mc
+    ? `<div class="tr"><p style="color:var(--mut);font-size:13px">Simulando 3.000 torneos en tu navegador…</p></div>`
+    : (() => {
+      const top = state.mc.slice(0, 12), max = top[0].champ || 1;
+      return `<div class="tr"><h2 style="font-size:17px;margin-bottom:4px">🏆 Camino al título</h2>
+      <p style="font-size:11px;color:var(--mut);margin-bottom:16px">Probabilidad de campeonar · Monte Carlo 3.000 sims con el estado REAL del torneo</p>
+      ${top.map((t, i) => `<div class="trow" style="animation-delay:${i*0.05}s">
+        <span class="rk">${i+1}</span><div>
+        <div class="tname">${esc(t.t)} <span style="font-size:10px;color:var(--mut)">semis ${t.semi.toFixed(0)}%</span></div>
+        <div class="tbar"><i style="width:${t.champ/max*100}%"></i></div></div>
+        <span class="pct">${t.champ.toFixed(1)}%</span></div>`).join("")}</div>`;
+    })();
+  $("v-pred").innerHTML = `<h2 style="font-size:16px;margin-bottom:14px">🔮 Próximos partidos · probabilidad 1X2 (modelo Elo)</h2>
+    <div class="grid">${next.map(cardHTML).join("")}</div>${mcHTML}`;
+}
+
+function renderHist() {
+  $("v-hist").innerHTML = `<div class="hgrid">${FACTS.map(([e, tag, t, x], i) =>
+    `<div class="hc" style="animation-delay:${i*0.06}s"><div class="em">${e}</div><h3>${t}</h3><p>${x}</p></div>`).join("")}</div>`;
+}
+
+function renderTicker() {
+  const txt = state.all.filter(m => m.state !== "pre").slice(-10)
+    .concat(state.all.filter(m => m.state === "in"))
+    .map(m => `${esc(m.h)} <b>${esc(m.hs)}–${esc(m.as)}</b> ${esc(m.a)} ${m.state==="in"?`<span class="lv">● ${esc(m.detail)}</span>`:"FT"}`)
+    .join(" &nbsp;◆&nbsp; ") || "Mundial 2026 · 11 de junio – 19 de julio";
+  $("ticker").innerHTML = txt + " &nbsp;◆&nbsp; " + txt;
+}
+
+function renderAll() {
+  renderTicker(); renderHoy(); renderCal(); renderGrupos(); renderPred(); renderHist();
+  $("upd").textContent = state.lastUpd ? ` · actualizado ${fmtT(state.lastUpd)}` : "";
+}
+
+/* tabs */
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  ["hoy","cal","grupos","pred","hist"].forEach(v => $("v-" + v).hidden = v !== b.dataset.t);
+});
+
+/* arranque + auto-refresh */
+loadAll();
+setInterval(loadAll, 60_000);
+</script>
+</body>
+</html>
