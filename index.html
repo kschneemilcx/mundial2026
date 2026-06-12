@@ -30,9 +30,10 @@ a{color:var(--vio2)}
 .tk{display:inline-block;padding:8px 0;animation:scroll 45s linear infinite;font-size:12px;color:var(--mut)}
 .tk b{color:var(--mag)} .tk .lv{color:var(--live)}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:34px 0 8px}
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:0 0 8px;margin-top:-44px;position:relative;z-index:2}
 .hdr h1{font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-.025em;line-height:.95;
-background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+filter:drop-shadow(0 4px 18px rgba(6,4,16,.9))}
 .liveDot{font-size:10px;border:1px solid var(--live);color:var(--live);padding:4px 11px;border-radius:99px;
 letter-spacing:.14em;animation:blink 1.6s ease infinite;background:rgba(74,222,128,.06)}
 .sub{color:var(--mut);font-size:12px;margin:8px 0 20px}
@@ -41,6 +42,37 @@ letter-spacing:.14em;animation:blink 1.6s ease infinite;background:rgba(74,222,1
 .tab{background:none;border:none;color:var(--mut);font-family:'Space Mono';font-size:12.5px;padding:11px 12px;
 cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
 .tab:hover{color:var(--txt)} .tab.on{color:var(--mag);border-image:var(--grad) 1;border-bottom:2px solid}
+/* ───── HERO DRAMÁTICO ───── */
+.stage{position:relative;margin:0 -16px 22px;padding:0 16px;overflow:hidden}
+.stageArt{position:relative;border-radius:0 0 26px 26px;overflow:hidden;height:200px;margin:0 -16px;
+border-bottom:1px solid var(--line)}
+.stageArt svg{position:absolute;inset:0;width:100%;height:100%}
+.stageGlow{position:absolute;left:50%;top:-40px;transform:translateX(-50%);width:340px;height:200px;
+background:radial-gradient(ellipse,rgba(232,121,249,.22),transparent 70%);filter:blur(28px);pointer-events:none}
+@media (max-width:560px){.stageArt{height:150px}}
+/* ───── PARTIDO EN VIVO DESTACADO ───── */
+.liveHero{position:relative;background:linear-gradient(135deg,#0e2418 0%,#13301f 50%,#0c1f16 100%);
+border:1px solid rgba(74,222,128,.45);border-radius:20px;padding:22px;margin-bottom:24px;overflow:hidden;
+box-shadow:0 14px 50px rgba(74,222,128,.12);animation:up .5s ease both}
+.liveHero::before{content:"";position:absolute;inset:-1px;border-radius:20px;padding:1px;
+background:linear-gradient(120deg,rgba(74,222,128,.6),rgba(167,139,250,.25),transparent 60%);
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.liveHero .lhTag{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.18em;color:var(--live);
+font-family:'Syne';font-weight:700;margin-bottom:18px}
+.liveHero .lhDot{width:9px;height:9px;border-radius:50%;background:var(--live);animation:pulse 1.3s ease infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.55)}70%{box-shadow:0 0 0 12px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.lhMain{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.lhTeam{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer}
+.lhTeam img{width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,.55))}
+.lhTeam span{font-family:'Syne';font-weight:700;font-size:14px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.lhScore{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.lhScore b{font-family:'Syne';font-weight:800;font-size:clamp(34px,9vw,52px);line-height:1;color:#fff;letter-spacing:.02em}
+.lhScore .min{font-size:12px;color:var(--live);font-weight:700;font-family:'Space Mono'}
+.lhVen{text-align:center;font-size:10.5px;color:var(--mut);margin-top:16px}
+.lhGoals{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(74,222,128,.2);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center}
+.lhGoal{font-size:11px;color:var(--txt)}
+.lhGoal small{color:var(--live)}
+@media (max-width:480px){.lhTeam img{width:46px;height:46px}.lhTeam span{font-size:12px}}
 /* carrusel */
 .fact{position:relative;background:linear-gradient(135deg,#1a1233 0%,#241345 55%,#1a0f33 100%);
 border:1px solid var(--line);border-radius:20px;padding:26px 26px 30px;margin-bottom:24px;overflow:hidden;
@@ -214,6 +246,72 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
 
 <div class="ticker"><span class="tk" id="ticker">Cargando marcadores en vivo…</span></div>
 
+<div class="stageArt" aria-hidden="true">
+  <svg viewBox="0 0 1080 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0a0618"/><stop offset="1" stop-color="#160d2e"/>
+      </linearGradient>
+      <radialGradient id="spot" cx="50%" cy="0%" r="70%">
+        <stop offset="0" stop-color="rgba(232,121,249,.35)"/><stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1a1438"/><stop offset="1" stop-color="#0d0820"/>
+      </linearGradient>
+      <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(167,139,250,.5)"/><stop offset="1" stop-color="transparent"/>
+      </linearGradient>
+      <linearGradient id="ballg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#c9bdf0"/>
+      </linearGradient>
+    </defs>
+    <rect width="1080" height="200" fill="url(#sky)"/>
+    <!-- gradas -->
+    <path d="M0 70 L1080 70 L1080 120 L0 120 Z" fill="#140d2a"/>
+    <g opacity=".5">
+      <circle cx="120" cy="46" r="2.4" fill="#a78bfa"/><circle cx="300" cy="40" r="2.4" fill="#e879f9"/>
+      <circle cx="520" cy="44" r="2.4" fill="#a78bfa"/><circle cx="760" cy="40" r="2.4" fill="#fbbf24"/>
+      <circle cx="960" cy="46" r="2.4" fill="#a78bfa"/>
+      <circle cx="200" cy="56" r="1.8" fill="#e879f9"/><circle cx="430" cy="58" r="1.8" fill="#a78bfa"/>
+      <circle cx="650" cy="54" r="1.8" fill="#fbbf24"/><circle cx="880" cy="58" r="1.8" fill="#a78bfa"/>
+    </g>
+    <!-- torres de luz + haces -->
+    <g>
+      <rect x="158" y="8" width="44" height="10" rx="2" fill="#2a2150"/>
+      <polygon points="180,16 60,120 320,120" fill="url(#beam)" opacity=".55"/>
+      <rect x="878" y="8" width="44" height="10" rx="2" fill="#2a2150"/>
+      <polygon points="900,16 760,120 1020,120" fill="url(#beam)" opacity=".55"/>
+    </g>
+    <ellipse cx="540" cy="20" rx="640" ry="120" fill="url(#spot)"/>
+    <!-- cancha -->
+    <path d="M-40 118 L1120 118 L1280 200 L-200 200 Z" fill="url(#pitch)"/>
+    <g stroke="rgba(167,139,250,.28)" stroke-width="2" fill="none">
+      <line x1="540" y1="118" x2="540" y2="200"/>
+      <ellipse cx="540" cy="160" rx="70" ry="26"/>
+      <path d="M250 200 L320 130 L760 130 L830 200"/>
+    </g>
+    <!-- siluetas de jugadores en acción -->
+    <g fill="#0b0718" opacity=".92">
+      <!-- jugador 1 corriendo -->
+      <path d="M430 175 q-4 -16 2 -26 q-8 -10 -2 -20 q4 -8 12 -7 q9 1 9 10 q6 8 1 18 q7 12 1 28 q-3 6 -9 5 q3 8 -2 14 l-5 -1 l3 -13 q-6 1 -9 -4 l-8 12 l-5 -3 l11 -16 q4 -6 10 -3 z" transform="translate(-10,0)"/>
+      <circle cx="432" cy="92" r="9" fill="#0b0718"/>
+      <!-- jugador 2 pateando -->
+      <path d="M650 178 q-3 -18 4 -30 q-7 -9 0 -20 q5 -9 14 -6 q9 3 6 13 q5 10 -2 20 q8 14 3 28 l8 8 l-4 5 l-11 -10 q-5 2 -10 -2 l-2 14 l-6 0 l1 -16 q-2 -6 6 -7 z"/>
+      <circle cx="668" cy="88" r="9" fill="#0b0718"/>
+    </g>
+    <!-- balón con destello -->
+    <g transform="translate(710,150)">
+      <circle r="13" fill="url(#ballg)"/>
+      <path d="M0 -13 L7 -4 L4 7 L-4 7 L-7 -4 Z" fill="#1a1438"/>
+      <circle r="13" fill="none" stroke="#fff" stroke-width="1" opacity=".5"/>
+      <g stroke="#e879f9" stroke-width="1.6" opacity=".8">
+        <line x1="16" y1="-2" x2="30" y2="-6"/><line x1="16" y1="4" x2="28" y2="8"/><line x1="14" y1="10" x2="24" y2="18"/>
+      </g>
+    </g>
+  </svg>
+  <div class="stageGlow"></div>
+</div>
+
 <div class="wrap">
   <header class="hdr">
     <h1>MUNDIAL 2026 LIVE</h1>
@@ -234,6 +332,7 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
   <div id="err"></div>
 
   <section id="v-hoy">
+    <div id="liveHero"></div>
     <div class="fact" id="fact">
       <div class="ctr">
         <button class="nav" onclick="factPrev()" aria-label="anterior">‹</button>
@@ -571,6 +670,30 @@ function renderScore() {
   $("myScore").textContent = tot ? `🎯 Tus aciertos: ${ok}/${tot}` : `🎯 Vota y mide tu puntería`;
 }
 
+function renderLiveHero() {
+  const box = $("liveHero");
+  if (!box) return;
+  const lives = state.all.filter(m => m.state === "in");
+  if (!lives.length) { box.innerHTML = ""; return; }
+  const cache = store.get("wc26_goals", {});
+  box.innerHTML = lives.map(m => {
+    const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "<span style='font-size:48px'>⚽</span>";
+    const goles = (cache[m.id] || []).map(g =>
+      `<span class="lhGoal">⚽ ${esc(g.p)} <small>${esc(g.c)}</small></span>`).join("");
+    return `<div class="liveHero">
+      <div class="lhTag"><span class="lhDot"></span>PARTIDO EN VIVO · ${esc(m.detail)}</div>
+      <div class="lhMain">
+        <div class="lhTeam" onclick="goTeam('${esc(m.h)}')">${lg(m.hl)}<span>${esc(m.h)}</span></div>
+        <div class="lhScore"><b>${esc(m.hs)} <span style="color:var(--mut)">·</span> ${esc(m.as)}</b>
+          <span class="min">● ${esc(m.detail)}</span></div>
+        <div class="lhTeam" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span>${esc(m.a)}</span></div>
+      </div>
+      ${goles ? `<div class="lhGoals">${goles}</div>` : ""}
+      <div class="lhVen">📍 ${esc(m.venue)}</div>
+    </div>`;
+  }).join("");
+}
+
 function renderHoy() {
   const now = new Date(), in36h = new Date(now.getTime() + 36 * 3.6e6);
   const lives = state.all.filter(m => m.state === "in");
@@ -580,6 +703,7 @@ function renderHoy() {
   $("hoyGrid").innerHTML = list.length
     ? `<div class="grid">${list.map(cardHTML).join("")}</div>`
     : `<div class="skel">No hay partidos en esta ventana. Mira el calendario 📅</div>`;
+  renderLiveHero();
   renderVotes(); renderScore();
   $("hoyScorers").innerHTML = scorersHTML(6);
 }
@@ -743,6 +867,20 @@ document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
 
 loadAll();
 setInterval(loadAll, 60_000);
+// refresco rápido del marcador en vivo cada 25s
+setInterval(async () => {
+  if (!state.all.some(m => m.state === "in")) return;
+  try {
+    const r = await fetch(`${API}/site/v2/sports/${LEAGUE}/scoreboard?dates=${RANGO}&limit=200`);
+    const cal = await r.json();
+    const fresh = (cal.events || []).map(parseEvent);
+    const byId = Object.fromEntries(fresh.map(m => [m.id, m]));
+    state.all = state.all.map(m => byId[m.id] || m);
+    state.lastUpd = new Date();
+    renderLiveHero(); renderTicker();
+    if (!$("v-hoy").hidden) renderHoy();
+  } catch (e) {}
+}, 25_000);
 </script>
 </body>
 </html>
