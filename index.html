@@ -69,6 +69,10 @@ font-family:'Syne';font-weight:700;margin-bottom:18px}
 .lhScore b{font-family:'Syne';font-weight:800;font-size:clamp(34px,9vw,52px);line-height:1;color:#fff;letter-spacing:.02em}
 .lhScore .min{font-size:12px;color:var(--live);font-weight:700;font-family:'Space Mono'}
 .lhVen{text-align:center;font-size:10.5px;color:var(--mut);margin-top:16px}
+.lhBot{text-align:center;font-size:11.5px;color:var(--vio2);margin-top:12px;padding-top:12px;
+border-top:1px dashed rgba(167,139,250,.25);line-height:1.5}
+.lhBot b{color:#fff;font-family:'Syne'}
+.lhNext .lhBot{border-top:none;padding-top:8px;margin-top:8px}
 .lhGoals{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(74,222,128,.2);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center}
 .lhGoal{font-size:11px;color:var(--txt)}
 .lhGoal small{color:var(--live)}
@@ -112,6 +116,21 @@ border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
 .factBody{animation:fadeIn .5s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 /* votación */
+.fulbot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+background:linear-gradient(115deg,#1d1340 0%,#2a1650 55%,#1a1238 100%);border:1px solid var(--vio);
+border-radius:18px;padding:18px 20px;margin:6px 0 16px;position:relative;overflow:hidden}
+.fulbot::before{content:"";position:absolute;inset:-1px;border-radius:18px;padding:1px;
+background:linear-gradient(120deg,rgba(167,139,250,.6),rgba(232,121,249,.3),transparent 60%);
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.fulbotLeft{display:flex;align-items:center;gap:15px;min-width:0}
+.fulbotBot{font-size:40px;line-height:1;filter:drop-shadow(0 4px 14px rgba(167,139,250,.5));animation:botFloat 3s ease-in-out infinite}
+@keyframes botFloat{50%{transform:translateY(-5px) rotate(-4deg)}}
+.fulbot h2{font-size:18px;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.fulbot p{font-size:11.5px;color:var(--mut);margin-top:4px;line-height:1.5;max-width:440px}
+.fulbotScore{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4);border-radius:12px;
+padding:10px 16px;text-align:center;font-size:11px;color:var(--gold);font-family:'Syne';font-weight:700;white-space:nowrap}
+.fulbotScore b{display:block;font-size:22px;color:#fff;margin-top:2px}
+@media (max-width:520px){.fulbot{justify-content:center;text-align:center}.fulbotLeft{flex-direction:column;text-align:center}.fulbot p{margin-inline:auto}}
 .voteSec{margin-bottom:26px}
 .secHead{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
 .secHead h2{font-size:17px}
@@ -200,7 +219,35 @@ border-bottom:1px dashed var(--line);animation:up .4s ease both}
 .glrow .who{font-size:13px}
 .glrow .who small{display:block;color:var(--mut);font-size:10.5px;margin-top:2px}
 .glrow .g{font-family:'Syne';font-weight:800;font-size:17px;color:var(--gold)}
+/* buscador portada */
+.homeSearch{position:relative;display:flex;align-items:center;gap:10px;background:var(--card);
+border:1px solid var(--line);border-radius:14px;padding:0 14px;margin-bottom:18px;transition:.2s;z-index:20}
+.homeSearch:focus-within{border-color:var(--mag);box-shadow:0 0 0 3px rgba(232,121,249,.12)}
+.homeSearch .hsIcon{font-size:15px;opacity:.7}
+.homeSearch input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-family:'Space Mono';
+font-size:13.5px;padding:14px 0}
+.homeSearch input::placeholder{color:var(--mut)}
+.hsResults{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card2);
+border:1px solid var(--line);border-radius:12px;overflow:hidden;display:none;
+box-shadow:0 16px 40px rgba(4,2,10,.6);max-height:320px;overflow-y:auto}
+.hsResults.on{display:block}
+.hsItem{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--line);font-size:13px;transition:.12s}
+.hsItem:last-child{border-bottom:none}
+.hsItem:hover{background:rgba(139,92,246,.14)}
+.hsItem img{width:22px;height:22px;object-fit:contain}
+.hsItem .hsg{margin-left:auto;font-size:10px;color:var(--mut)}
+.hsEmpty{padding:14px;font-size:12px;color:var(--mut);text-align:center}
 /* equipos */
+.teamSearch{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+border-radius:14px;padding:0 14px;margin-bottom:16px;transition:.2s}
+.teamSearch:focus-within{border-color:var(--mag);box-shadow:0 0 0 3px rgba(232,121,249,.12)}
+.teamSearch .tsIcon{font-size:15px;opacity:.7}
+.teamSearch input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-family:'Space Mono';
+font-size:13.5px;padding:14px 0}
+.teamSearch input::placeholder{color:var(--mut)}
+.teamSearch .tsClear{background:var(--card2);border:1px solid var(--line);color:var(--mut);width:26px;height:26px;
+border-radius:8px;cursor:pointer;font-size:12px;flex-shrink:0}
+.teamSearch .tsClear:hover{color:var(--mag);border-color:var(--mag)}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:20px}
 .tchip{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 11px;display:flex;
 align-items:center;gap:8px;font-size:11.5px;cursor:pointer;transition:.15s}
@@ -218,6 +265,8 @@ border-radius:20px;padding:24px;display:flex;align-items:center;gap:18px;flex-wr
 .kpi b{display:block;font-family:'Syne';font-weight:800;font-size:20px;color:var(--gold)}
 .kpi span{font-size:9.5px;color:var(--mut);letter-spacing:.1em}
 .cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}
+.teamFactPanel{background:linear-gradient(135deg,#1a1233,#231443)}
+.teamFact{font-size:12.5px;line-height:1.7;color:var(--mut)}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;animation:up .4s ease both}
 .panel h3{font-size:14px;margin-bottom:12px;color:var(--mag)}
 .flist{display:flex;flex-direction:column;gap:10px}
@@ -353,7 +402,7 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
     <button class="tab on" data-t="hoy">⚽ Hoy</button>
     <button class="tab" data-t="cal">📅 Calendario</button>
     <button class="tab" data-t="grupos">📊 Tablas</button>
-    <button class="tab" data-t="equipos">🌍 Equipos</button>
+    <button class="tab" data-t="equipos">🔍 Buscar equipo</button>
     <button class="tab" data-t="pred">🔮 Predicciones</button>
     <button class="tab" data-t="hist">📜 Historia</button>
   </nav>
@@ -361,6 +410,13 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
   <div id="err"></div>
 
   <section id="v-hoy">
+    <div class="homeSearch">
+      <span class="hsIcon">🔍</span>
+      <input id="homeSearchInput" type="text" autocomplete="off"
+        placeholder="Busca tu selección: Colombia, Brasil, España…"
+        oninput="onHomeSearch(this.value)" onfocus="onHomeSearch(this.value)"/>
+      <div id="homeSearchResults" class="hsResults"></div>
+    </div>
     <div id="liveHero"></div>
     <div class="fact" id="fact">
       <div class="ctr">
@@ -371,9 +427,15 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
       <div class="dots" id="dots"></div>
     </div>
     <div class="voteSec">
-      <div class="secHead">
-        <h2>🗳️ Vota: ¿quién gana el próximo partido?</h2>
-        <span class="score" id="myScore"></span>
+      <div class="fulbot">
+        <div class="fulbotLeft">
+          <span class="fulbotBot">🤖</span>
+          <div>
+            <h2>Compite contra Fulbot</h2>
+            <p>Vota quién gana el próximo partido y reta a nuestro modelo estadístico. ¿Le ganas a la máquina?</p>
+          </div>
+        </div>
+        <div class="fulbotScore" id="myScore"></div>
       </div>
       <div class="vgrid" id="votes"><div class="skel">Cargando próximos partidos…</div></div>
     </div>
@@ -436,15 +498,30 @@ if (CONFIG.whatsapp && !CONFIG.whatsapp.includes("PEGA_AQUI")) {
 /* ═════════════ DATOS CURIOSOS ═════════════ */
 const FACTS = [
   ["🏟️","SABÍAS QUE…","El Azteca hace historia triple","Es el único estadio del planeta en albergar la inauguración de TRES Mundiales: 1970, 1986 y 2026. Ahí levantaron la copa Pelé y Maradona."],
-  ["⚡","RÉCORD","El gol más rápido: 10.8 segundos","Hakan Şükür (Turquía) marcó a los 10.8 segundos contra Corea del Sur en 2002. Hubo gente que se lo perdió por ir por las palomitas."],
-  ["👑","LEYENDA","Campeón del mundo a los 17 años","Pelé ganó su primer Mundial en 1958 con 17 años… y sigue siendo el único jugador de la historia con TRES Copas del Mundo."],
+  ["⚽","EL PRIMER GOL","Un francés abrió la historia","El primer gol en la historia de los Mundiales lo marcó Lucien Laurent el 13 de julio de 1930, en el partido de Francia contra México en Uruguay."],
+  ["⚡","RÉCORD","El gol más rápido: 11 segundos","El turco Hakan Şükür marcó contra Corea del Sur a los 11 segundos, en el partido por el tercer puesto de 2002. Nadie ha marcado más rápido."],
+  ["👑","LEYENDA","Campeón del mundo a los 17 años","Pelé ganó su primer Mundial en 1958 con 17 años y sigue siendo el campeón mundial más joven de la historia."],
   ["🇨🇴","ORGULLO CAFETERO","El techo de Colombia: Brasil 2014","Cuartos de final, James Botín de Oro con 6 goles y el Premio Puskás por la volea ante Uruguay. ¿Se rompe el techo este año?"],
-  ["🥅","GOLEADOR ETERNO","Klose: 16 goles y contando… nadie","Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles en 4 ediciones. Messi quedó en 13."],
-  ["😱","LA TRAGEDIA","El Maracanazo, 1950","Uruguay silenció a ~200.000 brasileños en el Maracaná ganando la final 2-1. Brasil estrenó después otra camiseta: nació la 'verdeamarela'."],
+  ["🇨🇴","HAZAÑA ÚNICA","El único gol olímpico de un Mundial","Solo se ha registrado uno en la historia: el colombiano Marcos Coll lo anotó directo desde un tiro de esquina contra la Unión Soviética en Chile 1962."],
+  ["🥅","GOLEADOR ETERNO","Klose: 16 goles, nadie lo supera","El alemán Miroslav Klose es el máximo goleador histórico de los Mundiales con 16 goles, superando los 15 de Ronaldo Nazário."],
+  ["🎯","FRANCOTIRADOR","13 goles en UN solo Mundial","Just Fontaine (Francia) marcó 13 goles en Suecia 1958. Ni Pelé, ni Maradona, ni Messi, ni Cristiano han superado esa cifra en más de seis décadas."],
+  ["🔥","FINAL ÉPICA","Un hat-trick que esperó 56 años","Geoff Hurst fue el único con triplete en una final durante más de medio siglo. En 2022 Mbappé lo igualó ante Argentina… y aun así perdió."],
+  ["🧤","INSÓLITO","El portero que tapó y cobró penal","En Alemania 2006 el portugués Ricardo atajó un penal y, en la misma tanda, se adelantó a cobrar el siguiente… y lo convirtió. Rarísimo."],
+  ["📅","VETERANO","Jugó un Mundial a los 45 años","El portero egipcio Essam El-Hadary jugó en Rusia 2018 con 45 años, siendo también el capitán más veterano en la historia del torneo."],
+  ["🦁","RÉCORD VIGENTE","El goleador más veterano","El camerunés Roger Milla marcó en Estados Unidos 1994 con 42 años y 39 días. Ese récord sigue intacto."],
+  ["🇧🇷","CONSTANTE","Brasil nunca ha faltado","Es la única selección que ha jugado TODOS los Mundiales desde Uruguay 1930. También es el único pentacampeón."],
+  ["🏆","CLUB EXCLUSIVO","Solo 8 campeones en casi un siglo","Únicamente ocho selecciones han levantado la copa: Brasil, Alemania, Italia, Argentina, Uruguay, Francia, Inglaterra y España."],
+  ["💥","GOLEADA HISTÓRICA","Hungría 10 - 1 El Salvador","En España 1982, Hungría firmó la mayor goleada en la historia de los Mundiales. Sigue siendo el récord absoluto."],
+  ["🎢","LOCURA DE GOLES","Austria 7 - 5 Suiza (1954)","El partido con más goles de la historia: 12 en total. Suiza llegó a ganar 3-0… y terminó perdiendo 7-5."],
+  ["🟥","LA BATALLA DE NÚREMBERG","20 tarjetas en un partido","Portugal 1-0 Países Bajos (2006): 4 rojas y 16 amarillas. El árbitro perdió el control y hasta la FIFA criticó su actuación."],
+  ["🟨","RÉCORD DE AMARILLAS","18 en un solo partido","En Catar 2022, el árbitro Mateu Lahoz mostró 18 amarillas en el Argentina vs Países Bajos de cuartos. Récord mundialista."],
+  ["🐕","INCREÍBLE","Un perro salvó la Copa del Mundo","La Copa Jules Rimet fue robada antes del Mundial de 1966. La encontró un perro llamado Pickles, envuelta en periódico bajo un arbusto en Londres."],
+  ["🔴","FINAL AMARGA","Zidane se despidió expulsado","Zinedine Zidane terminó su carrera en la final de 2006 con el famoso cabezazo a Materazzi. Fue la roja n.º 28 de esa edición, un récord."],
+  ["🟢","DEBUT Y ADIÓS","Un país jugó un solo partido","Las Indias Orientales Neerlandesas jugaron en 1938, perdieron 6-0 con Hungría y nunca más volvieron a un Mundial."],
+  ["😱","LA TRAGEDIA","El Maracanazo, 1950","Uruguay silenció a ~200.000 brasileños en el Maracaná ganando la final 2-1. Brasil cambió de camiseta después: nació la 'verdeamarela'."],
+  ["🐐","BONUS","Cinco Mundiales marcando","Cristiano Ronaldo es el único futbolista que ha marcado goles en cinco Mundiales distintos: 2006, 2010, 2014, 2018 y 2022."],
   ["🆕","HISTÓRICO","El Mundial más grande de la historia","Primera edición con 48 selecciones, 12 grupos, 104 partidos y 3 países anfitriones. Debutan Curazao, Cabo Verde, Jordania y Uzbekistán."],
   ["🏆","EL TROFEO","6.1 kg de oro de 18 quilates","La copa actual se entrega desde 1974. El campeón se lleva una réplica: la original vive en Zúrich, en la sede de la FIFA."],
-  ["🎯","FRANCOTIRADOR","13 goles en UN solo Mundial","Just Fontaine (Francia) marcó 13 goles en Suecia 1958. Un récord que lleva más de 65 años sin que nadie se le acerque."],
-  ["🔥","FINAL ÉPICA","El hat-trick de Mbappé… y perdió","En Catar 2022 Mbappé marcó 3 goles en la final, el primero en hacerlo desde Geoff Hurst en 1966… y aun así Argentina campeonó por penales."],
   ["🇲🇽","LA MALDICIÓN","El quinto partido","México cayó en octavos en 7 Mundiales consecutivos (1994–2018). Jugar en casa en 2026 es su mejor chance de romperla desde 1986."],
   ["📐","NERD ALERT","¿Cómo predice esta página?","Usamos ratings Elo (nacidos en el ajedrez) + simulación Monte Carlo: tu navegador juega el torneo completo 3.000 veces. Igual que en el trading cuantitativo. 😉"],
 ];
@@ -673,8 +750,8 @@ function voteCardHTML(m, i) {
     result = `<div class="vres">${duelHTML(m)}
       <div class="vmsg ${agree ? "ok" : "dare"}">
         ${agree
-          ? `✅ Vas con el favorito del modelo (<b>${pickName(modelPick)}</b>). ¿Tendrán razón?`
-          : `🔥 ¡Te la jugaste contra el modelo! Tú dices <b>${pickName(myVote)}</b>, el modelo dice <b>${pickName(modelPick)}</b>.`}
+          ? `✅ Coincides con Fulbot: él también va con <b>${pickName(modelPick)}</b>. ¿Tendrán razón los dos?`
+          : `🔥 ¡Le llevas la contraria a Fulbot! Tú dices <b>${pickName(myVote)}</b>, Fulbot dice <b>${pickName(modelPick)}</b>. A ver quién acierta…`}
       </div></div>`;
   }
   return `<div class="vc" style="animation-delay:${i*0.07}s">
@@ -704,14 +781,22 @@ function renderVotes() {
     : `<div class="skel">No hay partidos próximos para votar.</div>`;
 }
 function renderScore() {
+  const el = $("myScore");
+  if (!el) return;
   const votes = store.get("wc26_votes", {});
-  let ok = 0, tot = 0;
+  let yo = 0, bot = 0, tot = 0;
   state.all.filter(m => m.state === "post" && votes[m.id]).forEach(m => {
     tot++;
     const real = +m.hs > +m.as ? "h" : +m.hs < +m.as ? "a" : "d";
-    if (votes[m.id] === real) ok++;
+    const p = probs(m.h, m.a);
+    const botPick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
+    if (votes[m.id] === real) yo++;
+    if (botPick === real) bot++;
   });
-  $("myScore").textContent = tot ? `🎯 Tus aciertos: ${ok}/${tot}` : `🎯 Vota y mide tu puntería`;
+  if (!tot) { el.innerHTML = `TÚ vs FULBOT<b>0 - 0</b><span style="font-size:9px;color:var(--mut)">vota para empezar</span>`; return; }
+  const lead = yo > bot ? "var(--live)" : yo < bot ? "var(--red)" : "var(--gold)";
+  const msg = yo > bot ? "¡le ganas! 🔥" : yo < bot ? "Fulbot manda 🤖" : "empate ⚖️";
+  el.innerHTML = `TÚ vs FULBOT<b style="color:${lead}">${yo} - ${bot}</b><span style="font-size:9px;color:var(--mut)">${tot} partido${tot>1?"s":""} · ${msg}</span>`;
 }
 
 function renderLiveHero() {
@@ -725,6 +810,13 @@ function renderLiveHero() {
     box.innerHTML = lives.map(m => {
       const goles = (cache[m.id] || []).map(g =>
         `<span class="lhGoal">⚽ ${esc(g.p)} <small>${esc(g.c)}</small></span>`).join("");
+      const pr = probs(m.h, m.a);
+      const pk = pr.h >= pr.a && pr.h >= pr.d ? "h" : pr.a >= pr.d ? "a" : "d";
+      const pkN = pk === "h" ? esc(m.h) : pk === "a" ? esc(m.a) : "empate";
+      const pkPc = Math.round(Math.max(pr.h, pr.d, pr.a) * 100);
+      const botLine = pk === "d"
+        ? `🤖 Fulbot lo veía <b>parejo</b>`
+        : `🤖 Fulbot predijo: gana <b>${pkN}</b> (${pkPc}%)`;
       return `<div class="liveHero">
         <div class="lhTag"><span class="lhDot"></span>PARTIDO EN VIVO · ${esc(m.detail)}</div>
         <div class="lhMain">
@@ -734,6 +826,7 @@ function renderLiveHero() {
           <div class="lhTeam" onclick="goTeam('${esc(m.a)}')">${lg(m.al)}<span>${esc(m.a)}</span></div>
         </div>
         ${goles ? `<div class="lhGoals">${goles}</div>` : ""}
+        <div class="lhBot">${botLine}</div>
         <div class="lhVen">📍 ${esc(m.venue)}</div>
       </div>`;
     }).join("");
@@ -755,6 +848,16 @@ function renderLiveHero() {
       <div class="lhSideFoot">${fmtD(last.date)} · Final</div>
     </div>` : "";
 
+  let nextBot = "";
+  if (next) {
+    const pr = probs(next.h, next.a);
+    const pk = pr.h >= pr.a && pr.h >= pr.d ? "h" : pr.a >= pr.d ? "a" : "d";
+    const pkN = pk === "h" ? esc(next.h.split(" ")[0]) : pk === "a" ? esc(next.a.split(" ")[0]) : "empate";
+    const pkPc = Math.round(Math.max(pr.h, pr.d, pr.a) * 100);
+    nextBot = pk === "d"
+      ? `<div class="lhBot">🤖 Fulbot lo ve <b>parejo</b></div>`
+      : `<div class="lhBot">🤖 Fulbot predice: <b>${pkN}</b> (${pkPc}%)</div>`;
+  }
   const nextHTML = next ? `<div class="lhSide lhNext">
       <div class="lhSideTag">⏱️ PRÓXIMO PARTIDO</div>
       <div class="lhMini">
@@ -763,6 +866,7 @@ function renderLiveHero() {
         <span class="lhMiniTeam" onclick="goTeam('${esc(next.a)}')">${lg(next.al)}<b>${esc(next.a.split(" ")[0])}</b></span>
       </div>
       <div class="lhCount" data-kick="${next.date.getTime()}">Calculando…</div>
+      ${nextBot}
     </div>` : "";
 
   box.innerHTML = `<div class="liveHero liveIdle">
@@ -858,6 +962,9 @@ function renderGrupos() {
 /* ───── EQUIPOS: perfil completo por país ───── */
 function goTeam(name) {
   state.team = name;
+  state._focusSearch = false;
+  const hsb = $("homeSearchResults"); if (hsb) hsb.className = "hsResults";
+  const hsi = $("homeSearchInput"); if (hsi) hsi.value = "";
   document.querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
   document.querySelector('.tab[data-t="equipos"]').classList.add("on");
   ["hoy","cal","grupos","equipos","pred","hist"].forEach(v => $("v-" + v).hidden = v !== "equipos");
@@ -865,16 +972,57 @@ function goTeam(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 function renderEquipos() {
-  const chips = state.groups.flatMap(g => g.rows).sort((a, b) => a.team.localeCompare(b.team))
+  const q = (state.teamQuery || "").toLowerCase().trim();
+  const all = state.groups.flatMap(g => g.rows).sort((a, b) => a.team.localeCompare(b.team));
+  const filtered = q ? all.filter(r => r.team.toLowerCase().includes(q)) : all;
+  const chips = filtered
     .map(r => `<div class="tchip${state.team === r.team ? " on" : ""}" onclick="goTeam('${esc(r.team)}')">
       <img src="${esc(r.logo)}" loading="lazy"/><span>${esc(r.team)}</span></div>`).join("");
-  $("v-equipos").innerHTML = `<div class="tgrid">${chips || '<div class="skel">Cargando selecciones…</div>'}</div><div id="teamDetail"></div>`;
+  const search = `<div class="teamSearch">
+      <span class="tsIcon">🔍</span>
+      <input id="teamSearchInput" type="text" placeholder="Busca tu selección (Colombia, Brasil, España…)"
+        value="${esc(state.teamQuery || "")}" oninput="onTeamSearch(this.value)" autocomplete="off"/>
+      ${q ? `<button class="tsClear" onclick="onTeamSearch('')">✕</button>` : ""}
+    </div>`;
+  const grid = chips
+    ? `<div class="tgrid">${chips}</div>`
+    : `<div class="skel">${all.length ? `Sin resultados para "${esc(state.teamQuery)}" 🤔` : "Cargando selecciones…"}</div>`;
+  $("v-equipos").innerHTML = search + grid + `<div id="teamDetail"></div>`;
   renderTeamDetail();
+  // re-enfocar el input tras el re-render para que no pierda el foco al escribir
+  const inp = $("teamSearchInput");
+  if (inp && state._focusSearch) { inp.focus(); const n = (inp.value || "").length; try { inp.setSelectionRange(n, n); } catch (e) {} }
 }
+function onTeamSearch(v) {
+  state.teamQuery = v;
+  state._focusSearch = true;
+  renderEquipos();
+}
+
+function onHomeSearch(v) {
+  const box = $("homeSearchResults");
+  if (!box) return;
+  const q = (v || "").toLowerCase().trim();
+  if (!q) { box.className = "hsResults"; box.innerHTML = ""; return; }
+  const all = state.groups.flatMap(g => g.rows.map(r => ({ ...r, group: g.name })));
+  const hits = all.filter(r => r.team.toLowerCase().includes(q)).slice(0, 8);
+  box.className = "hsResults on";
+  box.innerHTML = hits.length
+    ? hits.map(r => `<div class="hsItem" onclick="goTeam('${esc(r.team)}')">
+        <img src="${esc(r.logo)}" loading="lazy"/>${esc(r.team)}
+        <span class="hsg">${esc(r.group)} · ${r.pts} pts</span></div>`).join("")
+    : `<div class="hsEmpty">Sin resultados para "${esc(v)}" 🤔</div>`;
+}
+// cerrar resultados al hacer clic fuera
+document.addEventListener("click", e => {
+  const hs = document.querySelector(".homeSearch");
+  const box = $("homeSearchResults");
+  if (hs && box && !hs.contains(e.target)) box.className = "hsResults";
+});
 function renderTeamDetail() {
   const box = $("teamDetail");
   if (!box) return;
-  if (!state.team) { box.innerHTML = `<div class="skel">👆 Elige una selección para ver su perfil completo: puntos, posición, próximo rival, resultados, goleadores y probabilidades.</div>`; return; }
+  if (!state.team) { box.innerHTML = `<div class="skel">🔍 Busca o elige tu selección para ver todo: clasificación, posición, cuándo juega, resultados, predicción de Fulbot, goleadores y datos curiosos.</div>`; return; }
   const T = state.team;
   let g = null, row = null, pos = 0;
   state.groups.forEach(gr => gr.rows.forEach((r, i) => { if (r.team === T) { g = gr; row = r; pos = i + 1; } }));
@@ -918,7 +1066,30 @@ function renderTeamDetail() {
       <div class="panel"><h3>📋 Resultados</h3><div class="flist">${resHTML}</div></div>
       <div class="panel"><h3>⚽ Goles de ${esc(T)}</h3>${golesHTML}</div>
       <div class="panel"><h3>📊 Su grupo</h3>${tableHTML(g, true)}</div>
+      <div class="panel teamFactPanel"><h3>💡 ¿Sabías que…?</h3><p class="teamFact">${teamFact(T)}</p></div>
     </div>`;
+}
+
+/* Datos curiosos por selección */
+const TEAM_FACTS = {
+  "Colombia": "Su mejor Mundial fue Brasil 2014: cuartos de final y James Rodríguez Botín de Oro con 6 goles, incluido el Premio Puskás por su volea ante Uruguay.",
+  "Brazil": "Único país que ha jugado TODOS los Mundiales de la historia y el más ganador, con 5 títulos (1958, 62, 70, 94, 2002).",
+  "Argentina": "Vigente campeona del mundo (Catar 2022). Messi es su máximo goleador histórico y ganó el Balón de Oro del torneo.",
+  "Spain": "Campeona en Sudáfrica 2010 con su estilo 'tiki-taka'. Es la única selección que ganó el Mundial tras perder su primer partido.",
+  "France": "Campeona en 1998 y 2018. Mbappé marcó un hat-trick en la final de 2022, hazaña que no se veía desde 1966… y aun así perdió.",
+  "Germany": "Tetracampeona del mundo (1954, 74, 90, 2014). En 2014 humilló a Brasil 7-1 en semifinales, en su propia casa.",
+  "England": "Campeona en 1966, su único título, conseguido en casa. Tiene el récord del gol más polémico de una final (el de Hurst que botó en la línea).",
+  "Portugal": "Cristiano Ronaldo es su emblema y el máximo goleador de selecciones de la historia. Su mejor resultado fue el 3er puesto en 1966.",
+  "Netherlands": "La 'Naranja Mecánica' inventó el fútbol total. Tres veces finalista (1974, 78, 2010) sin haber ganado nunca el título.",
+  "Mexico": "Sede por tercera vez. Cayó en octavos en 7 Mundiales seguidos (1994-2018): jugar en casa es su mejor chance de romper la maldición.",
+  "United States": "Anfitrión principal de 2026. Su mejor actuación fue el 3er lugar en el primer Mundial de la historia, Uruguay 1930.",
+  "Uruguay": "Ganó el primer Mundial (1930) y el 'Maracanazo' de 1950. Dos estrellas, pero su escudo luce cuatro por los oros olímpicos.",
+  "Croatia": "Subcampeona en 2018 y tercera en 2022, con apenas 4 millones de habitantes. Modrić ganó el Balón de Oro del Mundial 2018.",
+  "Morocco": "Primer país africano y árabe en llegar a semifinales (Catar 2022), eliminando a España y Portugal en el camino.",
+  "Japan": "Apodada los 'Samurai Blue', es famosa por sus hinchas que limpian las tribunas tras cada partido. En 2022 venció a Alemania y España.",
+};
+function teamFact(t) {
+  return TEAM_FACTS[t] || `${esc(t)} disputa el Mundial más grande de la historia: 48 selecciones y 104 partidos. ¡Sigue su camino aquí partido a partido!`;
 }
 
 function predCardHTML(m, i) {
