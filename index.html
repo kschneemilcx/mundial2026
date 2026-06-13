@@ -159,6 +159,10 @@ padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
 color:#4ade80;font-family:'Syne';font-weight:700;font-size:12.5px;padding:11px;border-radius:11px;cursor:pointer;transition:.15s}
 .shareBtn:hover{background:rgba(37,211,102,.2)}
 .shareBtn:active{transform:scale(.97)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);z-index:200;
+background:var(--card2);border:1px solid var(--vio);color:var(--txt);font-size:12.5px;padding:12px 18px;
+border-radius:12px;box-shadow:0 12px 36px rgba(4,2,10,.6);opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 /* duel */
 .duel{margin-top:12px}
 .fav{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:9px;
@@ -799,11 +803,32 @@ function shareVote(id, pick) {
   const mi = pick === "h" ? m.h : pick === "a" ? m.a : "empate";
   const url = location.href.split("#")[0];
   const texto = `⚽ Yo voté por ${mi} en ${m.h} vs ${m.a} y reté a Fulbot, la IA del Mundial. ¿Le ganas a la máquina? Vota aquí 👉 ${url}`;
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+  // 1) Compartir nativo (móvil) — si existe y el usuario no cancela
   if (navigator.share) {
-    navigator.share({ title: "Mundial 2026 · Compite contra Fulbot", text: texto, url }).catch(() => {});
-  } else {
-    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+    navigator.share({ title: "Mundial 2026 · Compite contra Fulbot", text: texto, url })
+      .catch(() => { window.open(waUrl, "_blank", "noopener"); }); // si cancela/falla, abre WhatsApp
+    return;
   }
+  // 2) Escritorio o sin share nativo → abrir WhatsApp en pestaña nueva
+  const win = window.open(waUrl, "_blank", "noopener");
+  // 3) Si el navegador bloqueó la ventana → copiar al portapapeles y avisar
+  if (!win) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto).then(() => toast("📋 ¡Mensaje copiado! Pégalo en tu grupo"))
+        .catch(() => toast("Copia este enlace: " + url));
+    } else {
+      toast("Comparte este enlace: " + url);
+    }
+  }
+}
+// mini-aviso temporal en pantalla
+function toast(msg) {
+  let t = document.getElementById("toast");
+  if (!t) { t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove("on"), 3200);
 }
 function renderVotes() {
   const next = state.all.filter(m => m.state === "pre").slice(0, 4);
