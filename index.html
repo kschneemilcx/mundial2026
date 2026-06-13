@@ -280,6 +280,10 @@ border-radius:20px;padding:24px;display:flex;align-items:center;gap:18px;flex-wr
 .predVerdict{background:linear-gradient(92deg,rgba(139,92,246,.18),rgba(232,121,249,.10));
 border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
 .predVerdict b{color:var(--vio2);font-family:'Syne'}
+.fulbotNote{background:rgba(139,92,246,.08);border:1px solid var(--line);border-radius:13px;
+padding:14px 16px;margin-bottom:18px;font-size:11.5px;line-height:1.65;color:var(--mut)}
+.fulbotNote b{color:var(--vio2)}
+.fulbotNote b:first-child{display:block;margin-bottom:7px;color:var(--mag);font-family:'Syne';font-size:12.5px}
 .predHero{background:linear-gradient(92deg,rgba(251,191,36,.14),rgba(232,121,249,.10));
 border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:13px 15px;font-size:12.5px;
 line-height:1.6;margin-bottom:18px}
@@ -1142,7 +1146,12 @@ function renderPred() {
         <span class="pct">${t.champ.toFixed(1)}%</span></div>`).join("")}</div>`;
     })();
   $("v-pred").innerHTML = `<h2 style="font-size:16px;margin-bottom:6px">🔮 ¿Quién ganará cada partido?</h2>
-    <p style="font-size:11.5px;color:var(--mut);margin-bottom:16px">El modelo Elo analiza la fuerza de cada selección y predice el ganador de los próximos partidos.</p>
+    <p style="font-size:11.5px;color:var(--mut);margin-bottom:14px">Fulbot analiza la fuerza de cada selección y predice el ganador de los próximos partidos.</p>
+    <div class="fulbotNote">
+      <b>🤖 ¿Cómo funciona Fulbot? (con total honestidad)</b>
+      Usa el sistema <b>Elo</b> —el mismo del ajedrez— para medir la fuerza de cada selección, y simula el torneo <b>3.000 veces</b> con el método <b>Monte Carlo</b>. Es matemática real, no inventada.
+      Pero ojo: <b>no predice el futuro.</b> No sabe de lesiones, expulsiones ni el momento de forma. Estima probabilidades con datos. A veces acierta, a veces el fútbol sorprende… y de eso se trata. ⚽ El marcador "Tú vs Fulbot" te deja medir qué tan bueno es de verdad.
+    </div>
     <div class="grid">${next.map(predCardHTML).join("")}</div>${mcHTML}`;
 }
 
