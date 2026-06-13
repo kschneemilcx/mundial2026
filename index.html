@@ -725,8 +725,8 @@ function duelHTML(m) {
   const favName = pick === "h" ? esc(m.h) : pick === "a" ? esc(m.a) : "Empate";
   const favPct = f(Math.max(p.h, p.d, p.a));
   const favTxt = pick === "d"
-    ? `El modelo ve un partido <b>parejo</b>`
-    : `El modelo favorece a <b>${favName}</b>`;
+    ? `Fulbot ve un partido <b>parejo</b>`
+    : `Fulbot favorece a <b>${favName}</b>`;
   return `<div class="duel">
     <div class="fav"><span class="ico">🔮</span><span>${favTxt}</span><span class="pc">${favPct}%</span></div>
     <div class="dlab">
@@ -798,28 +798,36 @@ function vote(id, pick) {
   renderVotes(); renderScore();
 }
 function shareVote(id, pick) {
-  const m = state.all.find(x => x.id === id);
-  if (!m) return;
-  const mi = pick === "h" ? m.h : pick === "a" ? m.a : "empate";
-  const url = location.href.split("#")[0];
-  const texto = `⚽ Yo voté por ${mi} en ${m.h} vs ${m.a} y reté a Fulbot, la IA del Mundial. ¿Le ganas a la máquina? Vota aquí 👉 ${url}`;
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-  // 1) Compartir nativo (móvil) — si existe y el usuario no cancela
-  if (navigator.share) {
-    navigator.share({ title: "Mundial 2026 · Compite contra Fulbot", text: texto, url })
-      .catch(() => { window.open(waUrl, "_blank", "noopener"); }); // si cancela/falla, abre WhatsApp
-    return;
-  }
-  // 2) Escritorio o sin share nativo → abrir WhatsApp en pestaña nueva
-  const win = window.open(waUrl, "_blank", "noopener");
-  // 3) Si el navegador bloqueó la ventana → copiar al portapapeles y avisar
-  if (!win) {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(texto).then(() => toast("📋 ¡Mensaje copiado! Pégalo en tu grupo"))
-        .catch(() => toast("Copia este enlace: " + url));
-    } else {
-      toast("Comparte este enlace: " + url);
+  toast("Abriendo para compartir… 📲");
+  try {
+    const m = state.all.find(x => x.id === id);
+    if (!m) { toast("No encontré el partido 🤔"); return; }
+    const mi = pick === "h" ? m.h : pick === "a" ? m.a : "empate";
+    const url = location.href.split("#")[0];
+    const texto = `⚽ Yo voté por ${mi} en ${m.h} vs ${m.a} y reté a Fulbot, la IA del Mundial. ¿Le ganas a la máquina? Vota aquí 👉 ${url}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+    // 1) Compartir nativo (móvil)
+    if (navigator.share) {
+      navigator.share({ title: "Mundial 2026 · Compite contra Fulbot", text: texto, url })
+        .catch(() => { copyShare(texto, url); });
+      return;
     }
+    // 2) Escritorio: intentar WhatsApp Web
+    const win = window.open(waUrl, "_blank", "noopener");
+    // 3) Si fue bloqueado, copiar
+    if (!win || win.closed || typeof win.closed === "undefined") copyShare(texto, url);
+  } catch (e) {
+    toast("No se pudo compartir, pero copié el enlace 📋");
+    try { navigator.clipboard && navigator.clipboard.writeText(location.href); } catch (_) {}
+  }
+}
+function copyShare(texto, url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto)
+      .then(() => toast("📋 ¡Mensaje copiado! Pégalo en tu grupo de WhatsApp"))
+      .catch(() => toast("Copia y comparte: " + url));
+  } else {
+    toast("Comparte este enlace: " + url);
   }
 }
 // mini-aviso temporal en pantalla
@@ -1161,8 +1169,8 @@ function predCardHTML(m, i) {
   const pick = p.h >= p.a && p.h >= p.d ? "h" : p.a >= p.d ? "a" : "d";
   const f = x => Math.round(x * 100);
   const verdict = pick === "d"
-    ? `⚖️ El modelo predice <b>partido parejo</b>`
-    : `🔮 El modelo predice que gana <b>${pick === "h" ? esc(m.h) : esc(m.a)}</b>`;
+    ? `⚖️ Fulbot, nuestro modelo estadístico, ve un <b>partido parejo</b>`
+    : `🔮 Fulbot, nuestro modelo estadístico, predice que el ganador será <b>${pick === "h" ? esc(m.h) : esc(m.a)}</b>`;
   const lg = u => u ? `<img src="${esc(u)}" alt="" loading="lazy"/>` : "⚽";
   return `<div class="mc" style="animation-delay:${(i||0)*0.06}s">
     <div class="mtop"><span>${fmtD(m.date)} · ${fmtT(m.date)}</span><span class="badge pre">PRÓXIMO</span></div>
