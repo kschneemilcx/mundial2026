@@ -150,10 +150,15 @@ padding:10px 16px;text-align:center;font-size:11px;color:var(--gold);font-family
 .vb{background:var(--card2);border:1px solid var(--line);color:var(--txt);font-family:'Space Mono';font-size:11.5px;
 padding:10px 4px;border-radius:10px;cursor:pointer;transition:.15s}
 .vb:hover{border-color:var(--mag);color:var(--mag)}
+.vb:active{transform:scale(.96)}
 .vb.sel{background:var(--vio);border-color:var(--vio);color:#fff;font-weight:700}
 .vres{margin-top:12px;animation:fadeIn .4s ease}
 .vmsg{font-size:11px;margin-top:9px;line-height:1.6}
 .vmsg.ok{color:var(--live)} .vmsg.dare{color:var(--gold)}
+.shareBtn{width:100%;margin-top:12px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.45);
+color:#4ade80;font-family:'Syne';font-weight:700;font-size:12.5px;padding:11px;border-radius:11px;cursor:pointer;transition:.15s}
+.shareBtn:hover{background:rgba(37,211,102,.2)}
+.shareBtn:active{transform:scale(.97)}
 /* duel */
 .duel{margin-top:12px}
 .fav{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:9px;
@@ -322,6 +327,14 @@ box-shadow:0 4px 18px rgba(37,211,102,.45);animation:waPulse 2.4s ease infinite;
 .note{font-size:10px;color:var(--mut);margin-top:28px;text-align:center;opacity:.75;line-height:1.9}
 .err{background:#2a1024;border:1px solid var(--red);color:#ffc9d4;border-radius:12px;padding:14px;font-size:12px;margin-bottom:16px}
 .skel{color:var(--mut);font-size:13px;padding:30px 0;text-align:center}
+/* skeleton loaders */
+.skBox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;overflow:hidden}
+.skLine{height:12px;border-radius:6px;margin:8px 0;
+background:linear-gradient(90deg,var(--line) 25%,#332a52 50%,var(--line) 75%);
+background-size:200% 100%;animation:shimmer 1.3s infinite}
+.skLine.short{width:45%} .skLine.mid{width:70%} .skLine.tall{height:22px;width:55%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 dialog{background:var(--card2);color:var(--txt);border:1px solid var(--vio);border-radius:18px;
 padding:28px;max-width:430px;font-family:'Space Mono';font-size:13px;line-height:1.8}
 dialog::backdrop{background:rgba(4,2,10,.85)}
@@ -441,10 +454,10 @@ padding:10px 20px;border-radius:10px;cursor:pointer}
         </div>
         <div class="fulbotScore" id="myScore"></div>
       </div>
-      <div class="vgrid" id="votes"><div class="skel">Cargando próximos partidos…</div></div>
+      <div class="vgrid" id="votes"><div class="skGrid"><div class="skBox"><div class="skLine short"></div><div class="skLine tall"></div><div class="skLine mid"></div></div><div class="skBox"><div class="skLine short"></div><div class="skLine tall"></div><div class="skLine mid"></div></div></div></div>
     </div>
     <div class="secHead"><h2>⚽ En vivo y hoy</h2></div>
-    <div id="hoyGrid"><div class="skel">Cargando partidos…</div></div>
+    <div id="hoyGrid"><div class="skGrid"><div class="skBox"><div class="skLine short"></div><div class="skLine tall"></div><div class="skLine mid"></div></div><div class="skBox"><div class="skLine short"></div><div class="skLine tall"></div><div class="skLine mid"></div></div><div class="skBox"><div class="skLine short"></div><div class="skLine tall"></div><div class="skLine mid"></div></div></div></div>
     <div id="hoyScorers"></div>
   </section>
 
@@ -756,7 +769,9 @@ function voteCardHTML(m, i) {
         ${agree
           ? `✅ Coincides con Fulbot: él también va con <b>${pickName(modelPick)}</b>. ¿Tendrán razón los dos?`
           : `🔥 ¡Le llevas la contraria a Fulbot! Tú dices <b>${pickName(myVote)}</b>, Fulbot dice <b>${pickName(modelPick)}</b>. A ver quién acierta…`}
-      </div></div>`;
+      </div>
+      <button class="shareBtn" onclick="shareVote('${m.id}','${myVote}')">📲 Reta a tus amigos</button>
+      </div>`;
   }
   return `<div class="vc" style="animation-delay:${i*0.07}s">
     <div class="vtop"><span>${fmtD(m.date)} · ${fmtT(m.date)}</span><span>📍 ${esc(m.venue)}</span></div>
@@ -777,6 +792,18 @@ function vote(id, pick) {
   const votes = store.get("wc26_votes", {});
   votes[id] = pick; store.set("wc26_votes", votes);
   renderVotes(); renderScore();
+}
+function shareVote(id, pick) {
+  const m = state.all.find(x => x.id === id);
+  if (!m) return;
+  const mi = pick === "h" ? m.h : pick === "a" ? m.a : "empate";
+  const url = location.href.split("#")[0];
+  const texto = `⚽ Yo voté por ${mi} en ${m.h} vs ${m.a} y reté a Fulbot, la IA del Mundial. ¿Le ganas a la máquina? Vota aquí 👉 ${url}`;
+  if (navigator.share) {
+    navigator.share({ title: "Mundial 2026 · Compite contra Fulbot", text: texto, url }).catch(() => {});
+  } else {
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+  }
 }
 function renderVotes() {
   const next = state.all.filter(m => m.state === "pre").slice(0, 4);
