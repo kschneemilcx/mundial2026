@@ -924,7 +924,9 @@ function renderCal() {
 
 /* ───── TABLAS: grupo individual, todos, goleadores ───── */
 function tableHTML(g, compact) {
-  const rows = g.rows.map((r, i) => `<tr class="${i < 2 ? "q" : ""}">
+  const ordered = [...g.rows].sort((a, b) =>
+    b.pts - a.pts || b.dg - a.dg || b.gf - a.gf || a.team.localeCompare(b.team));
+  const rows = ordered.map((r, i) => `<tr class="${i < 2 ? "q" : ""}">
     <td><span class="tm" onclick="goTeam('${esc(r.team)}')"><img src="${esc(r.logo)}" style="width:18px;height:18px" loading="lazy"/>
     <span class="nm">${esc(r.team)}</span></span></td>
     <td>${r.pj}</td>${compact ? "" : `<td>${r.gf}</td><td>${r.gc}</td>`}<td>${r.dg > 0 ? "+" : ""}${r.dg}</td>
@@ -1025,7 +1027,13 @@ function renderTeamDetail() {
   if (!state.team) { box.innerHTML = `<div class="skel">🔍 Busca o elige tu selección para ver todo: clasificación, posición, cuándo juega, resultados, predicción de Fulbot, goleadores y datos curiosos.</div>`; return; }
   const T = state.team;
   let g = null, row = null, pos = 0;
-  state.groups.forEach(gr => gr.rows.forEach((r, i) => { if (r.team === T) { g = gr; row = r; pos = i + 1; } }));
+  state.groups.forEach(gr => { if (gr.rows.some(r => r.team === T)) g = gr; });
+  if (g) {
+    const ordered = [...g.rows].sort((a, b) =>
+      b.pts - a.pts || b.dg - a.dg || b.gf - a.gf || a.team.localeCompare(b.team));
+    pos = ordered.findIndex(r => r.team === T) + 1;
+    row = ordered.find(r => r.team === T);
+  }
   if (!row) { box.innerHTML = `<div class="skel">Cargando…</div>`; return; }
   const mine = state.all.filter(m => m.h === T || m.a === T);
   const played = mine.filter(m => m.state === "post");
